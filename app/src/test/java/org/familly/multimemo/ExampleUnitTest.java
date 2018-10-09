@@ -1,4 +1,4 @@
-package org.familly.multimo;
+package org.familly.multimemo;
 
 import org.junit.Test;
 

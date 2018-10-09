@@ -1,4 +1,4 @@
-package org.familly.multimo;
+package org.familly.multimemo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
