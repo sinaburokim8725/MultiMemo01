@@ -10,7 +10,7 @@ import android.widget.ListView;
 import org.familly.multimemo.common.TitleBitmapButton;
 
 public class MultiMemoMainActivity extends AppCompatActivity {
-    //로그켓용 로그
+    //로그켓용
     public static final String TAG = "DEBUG";
 
     ListView mMemoListView;
