@@ -30,7 +30,8 @@ public class MemoListItemView extends LinearLayout {
         itemDate = (TextView) findViewById(R.id.text_itemDate);
         itemText = (TextView) findViewById(R.id.text_itemText);
         itemVideo = (ImageView) findViewById(R.id.image_itemVideoState);
-        itemVoice = (ImageView) findViewById(R.id.image_itemHandText);
+        itemVoice = (ImageView) findViewById(R.id.image_itemVoiceState);
+        itemHandText = (ImageView) findViewById(R.id.image_itemHandText);
     }
 
     /**

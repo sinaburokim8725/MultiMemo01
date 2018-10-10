@@ -26,7 +26,7 @@ public class MultiMemoMainActivity extends AppCompatActivity {
 
         //리스트 뷰 참조
         mMemoListView = (ListView) findViewById(R.id.list_memo);
-        //리스트아답타에 맥티비티 정보를 넘경준다.
+        //리스트아답타에 액티비티 정보를 넘겨준다.
         mMemoListAdapter = new MemoListAdapter(this);
         //리스트 뷰에 아답타를 설정한다.
         mMemoListView.setAdapter(mMemoListAdapter);
