@@ -100,9 +100,18 @@ public class TitleBitmapButton extends AppCompatButton {
     public boolean isSelected() {
         return selected;
     }
-
+    //초기화
     public void init() {
+        setBackgroundResource(backgroundBitmapNormal);
 
+        paint = new Paint();
+        paint.setColor(defaultColor);
+        paint.setAntiAlias(true);
+        paint.setTextScaleX(defaultScaleX);
+        paint.setTextSize(defaultSize);
+        paint.setTypeface(defaultTypeface);
+
+        selected = false;
     }
 
     //set icon bitmap
