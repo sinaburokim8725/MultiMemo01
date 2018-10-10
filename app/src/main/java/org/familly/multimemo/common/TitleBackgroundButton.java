@@ -14,6 +14,8 @@ import org.familly.multimemo.R;
 
 public class TitleBackgroundButton extends AppCompatButton {
 
+    private static final String TAG = "DEBUG";
+
     //base context
     Context context;
 
@@ -59,6 +61,9 @@ public class TitleBackgroundButton extends AppCompatButton {
 
         paint = new Paint();
         paint.setColor(defaultColor);
+        setText("멀티메모 초기버전");
+        titleText = getText();
+        //Log.d(TAG , "titleText : " + titleText);
 
         //앤티 앨리어싱은 그려지는 부분의 가장자리를 부드럽게 하는 기능:true false
         paint.setAntiAlias(true);
@@ -165,6 +170,9 @@ public class TitleBackgroundButton extends AppCompatButton {
     public void setDefaultTypeface(Typeface defaultTypeface) {
         this.defaultTypeface = defaultTypeface;
         paintChanged = true;
+    }
+    public String getText(){
+        return titleText;
     }
 
     public String getTitleText() {
