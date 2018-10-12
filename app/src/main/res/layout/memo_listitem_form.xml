@@ -11,19 +11,23 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="#ff99ffcc"
+            android:padding="5dp"
+
             >
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/image_itempPoto"
                 android:background="#ffff3333"
                 android:layout_margin="1dp"
+                android:layout_weight="2"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="#ff9900ff"
+                android:layout_weight="1"
 
                 >
                 <TextView
@@ -60,11 +64,12 @@
             android:background="#ffccff33"
             >
             <LinearLayout
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:orientation="horizontal"
                 android:background="#ffffff"
                 android:layout_gravity="center_horizontal"
+                android:layout_weight="2"
                 >
                 <ImageView
                     android:layout_width="wrap_content"
@@ -86,6 +91,7 @@
                 android:id="@+id/image_itemHandText"
                 android:background="#ffcc33cc"
                 android:layout_marginLeft="5dp"
+                android:layout_weight="1"
                 />
         </LinearLayout>
 
