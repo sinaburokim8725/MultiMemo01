@@ -1,29 +1,80 @@
 package org.familly.multimemo;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.familly.multimemo.common.TitleBitmapButton;
+import org.familly.multimemo.db.MemoDatabase;
+
+import java.io.File;
 
 public class MultiMemoMainActivity extends AppCompatActivity {
-    //로그켓용
+    //디버거용
     public static final String TAG = "DEBUG";
 
+    /**
+     *메모정보를 리스팅 할 리스트 뷰 참조
+     */
     ListView mMemoListView;
 
+    //1.데이터 베이스에서 조회한 메모정보를 메모리스트 아이템 객체에 설정
+    //2.설정된 아이템들의 정보를 리스트뷰의 각 설정부에 데이터를 설정해준다.
     MemoListAdapter mMemoListAdapter;
 
+    //조회된 메모리 리스의 총건수
     int mMemoCount = 0;
+
+    //메모 database 인스턴스 객체
+    public static MemoDatabase mDatabase = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multi_memo_main);
 
+        //sdcard  연결상태 첵크 check
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            //SD CARD가 연결되지 않을을경우
+            Toast.makeText(this, "SD 카드가 없습니다.\n SD 카드를 넣은후 다시실행하십시요", Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            //SD 카드가 연결되었을 경우
+            String externalPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            Log.d(TAG, "Environment.getExternalStorageDirectory().getAbsolutePath() 외부저장소 절대경로는 >>> " + externalPath);
+            if (!BasicInfo.ExternalChecked && externalPath != null) {
+                //외부저장소연결상태양호 그리고 외부저장소 경로가 있을경우
+                BasicInfo.ExternalPath = externalPath + File.separatorChar;
+                Log.d(TAG, "externalPath : " + externalPath + " , File.separatorChar : " + File.separator);
+
+                Log.d(TAG, "변경전 BasicInfo.FOLDER_PHOTO" + BasicInfo.FOLDER_PHOTO);
+                BasicInfo.FOLDER_PHOTO = BasicInfo.ExternalPath + BasicInfo.FOLDER_PHOTO;
+                Log.d(TAG, "변경후 BasicInfo.FOLDER_PHOTO" + BasicInfo.FOLDER_PHOTO);
+
+                BasicInfo.FOLDER_VIDEO = BasicInfo.ExternalPath + BasicInfo.FOLDER_VIDEO;
+                BasicInfo.FOLDER_VOICE = BasicInfo.ExternalPath + BasicInfo.FOLDER_VOICE;
+                BasicInfo.FOLDER_HANDWRITING = BasicInfo.ExternalPath + BasicInfo.FOLDER_HANDWRITING;
+                BasicInfo.DATABASE_NAME = BasicInfo.ExternalPath + BasicInfo.DATABASE_NAME;
+
+                BasicInfo.ExternalChecked = true;
+            }
+        }
+        //end sdcard check
+
+        /**
+         * 메모리스트
+         */
         //리스트 뷰 참조
         mMemoListView = (ListView) findViewById(R.id.list_memo);
         //리스트아답타에 액티비티 정보를 넘겨준다.
@@ -58,29 +109,179 @@ public class MultiMemoMainActivity extends AppCompatActivity {
             }
         });
 
-        loadMemoListData();
+        //
+        checkDangerousPermissions();
     }
-    //실제 데이터베이스에서 데이터를 가져오는 부분 구현필요.
-    public void loadMemoListData() {
 
-        MemoListItem aItem = new MemoListItem("1","2018-10-10",
-                "아 가을이다 세월은 정말 빨리도 지나가는구낭",
-                null,null,
-                null,null,
-                null,null,
-                null,null);
-        //리스트 컬렉션에 ArrayList 컬렉션에 아이템들을 담는다.
-        mMemoListAdapter.addIteme(aItem);
-        /**Notifies the attached observers that the underlying
-         * data has been changed and any View reflecting the data
-         * set should refresh itself.
-         기본 데이터가 변경되었으며
-         데이터 세트를 반영한 뷰가
-         자체적으로 새로 고쳐 져야 함을 알립니다.
-         *
-         */
-        mMemoListAdapter.notifyDataSetChanged();
+    private void checkDangerousPermissions() {
+        //문자배열로  퍼미션들 초기화 시켜준다.
+        String[] permissions = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA
+        };
+
+        int permissionCheck = -1;
+        //각 권한허가여부 첵크
+        for (int i = 0; i < permissions.length; i++) {
+            permissionCheck = ContextCompat.checkSelfPermission(this, permissions[i]);
+            if (permissionCheck == PackageManager.PERMISSION_DENIED) {
+                break;
+            }
+        }
+
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "권한 있음", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "권한 없음", Toast.LENGTH_SHORT).show();
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
+                Toast.makeText(this, "권한 설명 필요함", Toast.LENGTH_SHORT).show();
+            } else {
+                ActivityCompat.requestPermissions(this, permissions, 1);
+            }
+        }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult() 콜백 함수 호출됨");
+
+        if (requestCode == 1) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, permissions[i] + " : 권한이 승인됨.", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(this, permissions[i] + " : 권한이 승인되지 않음.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    /**
+     * database 오픈
+     */
+    public void openDatabase() {
+        //데이터베이스오픈
+        if (mDatabase != null) {
+            mDatabase.close();
+            mDatabase = null;
+        }
+        mDatabase = MemoDatabase.getInstance(this);
+        boolean isOpen = mDatabase.open();
+        if (isOpen) {
+            Log.d(TAG, "메모데이터베이스 오픈됨");
+        } else {
+            Log.d(TAG, "메모데이터베이스 오픈실패");
+        }
+    }
+
+    /**
+     *
+     */
+    @Override
+    protected void onStart() {
+        //데이터베이스 신규생성및 오픈
+        openDatabase();
+
+        //메모데이터 로딩
+        loadMemoListData();
+
+
+        super.onStart();
+    }
+
+    //end
+    //실제 데이터베이스에서 데이터를 가져오는 부분 구현필요.
+    public int loadMemoListData() {
+        String sql = "SELECT _id, input_date,content_text,"
+                + "id_photo,id_video,id_voice,id_handwriting "
+                + "FROM MEMO ORDER BY input_date DESC";
+        int recordCount = -1;
+        //데이터 베이스 객체가 널이 아닐경우 즉 오픈되었을경우만
+        if (MultiMemoMainActivity.mDatabase != null) {
+
+            //조회
+            Cursor rCursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
+
+            //조회건수
+            recordCount = rCursor.getCount();
+            Log.d(TAG, "조회건수 : " + recordCount);
+
+            //조회정보를 담는 아이템 객체를 담는 컬렉션 객체(List 클래스형)를 초기화한다.
+            mMemoListAdapter.clear();
+
+            //1.조회된건수를 MemoListItem 객체에 설정하고 건수만큼 컬렉션 객체에 담는다.
+            for (int i = 0; i < recordCount; i++) {
+                //첫번째 조회건수의 인덱스를 가리키도록 한다.
+                rCursor.moveToNext();
+
+                String memoId      = rCursor.getString(0);
+                String inputDate   = rCursor.getString(1);
+                //리스트를 보여주는 화면에서는 메모내용이 길경우 잘라서 보여주고
+                //상세화면에서 모든것을 보여주는 것으로 한다.
+                if (inputDate.length() > 10) {
+                    inputDate = inputDate.substring(0, 10);
+                }
+                String contentText = rCursor.getString(2);
+                String photoId = rCursor.getString(3);
+                String photoUriStr = getPhotoUriStr(photoId);
+
+                String videoId = rCursor.getString(4);
+                String videoUriStr = null;
+
+                String voiceId = rCursor.getString(5);
+                String voiceUriStr = null;
+
+                String handWritingId = rCursor.getString(6);
+                String handWrithingUriStr = null;
+
+                //MomoListItem 객체생성
+                MemoListItem memoListItem = new MemoListItem(memoId, inputDate, contentText,
+                        handWritingId, handWrithingUriStr,
+                        photoId, photoUriStr,
+                        videoId, videoUriStr,
+                        voiceId, voiceUriStr);
+
+                //MemoListItem 객체들 리스트 컬렉션에 담기
+                mMemoListAdapter.addIteme(memoListItem);
+            }//end for
+            //커서 닫기
+            rCursor.close();
+
+            //아답타에게 데이터가 변경되었으며 데이터셋을 반영한 뷰가 자체적으로
+            //새로고쳐져야함을 알린다 즉 콜백함수 getView()호출
+            mMemoListAdapter.notifyDataSetChanged();
+        }
+
+        return recordCount;
+    }
+
+    /**
+     * 사진 데이터 URI 가져오기
+     * @param photoId
+     * @return
+     */
+    private String getPhotoUriStr(String photoId) {
+        String photoUriStr = null;
+        //photo id 가 유효할경우 쿼리해서 사진 id를 가져온다.
+        if (photoId != null && !photoId.equals("-1")) {
+            //photo id 는 문자열이고 포토테이블의 _id는 정수다 정수로 변경해서 조건절에 비교
+            //해야 하지않을까?
+            String sql = "SELECT uri FROM " + MemoDatabase.TABLE_PHOTO + " WHERE _id = "+ photoId + "";
+            Cursor pCursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
+            if (pCursor.moveToNext()) {
+                photoUriStr = pCursor.getString(0);
+            }
+            pCursor.close();
+
+        } else if (photoId == null || photoId.equals("-1")) {
+            photoUriStr = "";
+        }
+        return photoUriStr;
+    }
+
     //
     public void viewMemo(int index){
         Log.d(TAG,"리스트아이템이 클릭될때 수정조회 화면으로 전환할수있다.");

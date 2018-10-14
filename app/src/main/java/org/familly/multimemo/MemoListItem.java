@@ -22,7 +22,7 @@ public class MemoListItem {
      * @param id_hand_writing
      * @param uri_handwriting
      * @param id_phto
-     * @param uri_phto
+     * @param uri_photo
      * @param id_video
      * @param uri_video
      * @param id_voice
