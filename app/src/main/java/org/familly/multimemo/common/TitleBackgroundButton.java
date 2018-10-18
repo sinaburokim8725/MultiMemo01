@@ -61,9 +61,6 @@ public class TitleBackgroundButton extends AppCompatButton {
 
         paint = new Paint();
         paint.setColor(defaultColor);
-        setText("멀티메모 초기버전");
-        titleText = getText();
-        //Log.d(TAG , "titleText : " + titleText);
 
         //앤티 앨리어싱은 그려지는 부분의 가장자리를 부드럽게 하는 기능:true false
         paint.setAntiAlias(true);

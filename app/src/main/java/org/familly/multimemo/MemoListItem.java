@@ -4,12 +4,12 @@ public class MemoListItem {
 
     private String itemId;
 
-    private Object[] objItems;
+    private String[] objItems;
 
     //각아이템을 선택할수 있는지 여부
     private boolean selectableListItem = true;
 
-    public MemoListItem(String itemId,Object[] obj) {
+    public MemoListItem(String itemId,String[] obj) {
         this.itemId = itemId;
         this.objItems = obj;
     }
@@ -35,7 +35,7 @@ public class MemoListItem {
                         String id_voice,String uri_voice) {
 
         itemId =memoId;
-        objItems = new Object[10];
+        objItems = new String[10];
         objItems[0] = memoDate;
         objItems[1] = memoText;
         objItems[2] = id_hand_writing;
@@ -67,7 +67,7 @@ public class MemoListItem {
      * Get data array
      * @return
      */
-    public Object[] getData(){
+    public String[] getData(){
         return objItems;
     }
 
@@ -76,7 +76,7 @@ public class MemoListItem {
      * @param index
      * @return
      */
-    public Object getData(int index) {
+    public String getData(int index) {
 
         if (objItems == null) {
             return null;
@@ -98,12 +98,12 @@ public class MemoListItem {
     public int compareTo(MemoListItem other) {
 
         if(objItems != null) {
-            Object[] array = other.getData();
+            String[] array = other.getData();
 
             //길이가 같으면 동일한 객체?
             if (objItems.length == array.length) {
                 int index = 0;
-                for (Object s : objItems) {
+                for (String s : objItems) {
                     if(!objItems[index].equals(s)){
                         return -1;
                     }
@@ -120,5 +120,9 @@ public class MemoListItem {
         }
         //정상코드
         return 0;
+    }
+
+    public String getId() {
+        return itemId;
     }
 }

@@ -77,6 +77,7 @@ public class MemoListItemView extends LinearLayout {
                    }
 
                    BitmapFactory.Options options =new BitmapFactory.Options();
+                   //sinaburokim
                    options.inSampleSize = 8;
                    bitmap = BitmapFactory.decodeFile(BasicInfo.FOLDER_PHOTO + data,options);
                    itemPhoto.setImageBitmap(bitmap);

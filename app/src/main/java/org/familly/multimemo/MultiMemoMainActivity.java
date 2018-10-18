@@ -1,11 +1,13 @@
 package org.familly.multimemo;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -85,16 +87,22 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         mMemoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                viewMemo(position);
+                viewMemo(position,"onTtemClick()");
             }
         });
-        //신규메모작성
+
+        //STAGE 2. 신규메모작성
         TitleBitmapButton nMemoButton =
                 (TitleBitmapButton) findViewById(R.id.button_newmemo);
         nMemoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"새로운 멀티메모를 작성합니다.");
+
+                //신규메모입력 액티비티로 이동한다.
+                Intent mIntent = new Intent(getApplicationContext(), MemoInsertActivity.class);
+                mIntent.putExtra(BasicInfo.KEY_MEMO_MODE, BasicInfo.MODE_INSERT);
+                startActivityForResult(mIntent,BasicInfo.REQ_INSERT_ACTIVITY);
             }
         });
         //종료
@@ -111,6 +119,25 @@ public class MultiMemoMainActivity extends AppCompatActivity {
 
         //
         checkDangerousPermissions();
+    }
+    //다른 액티버티의 응답처리
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "MultiMemoMainActivity  onActivityResult() 콜백함수 호출됨.");
+
+        switch (requestCode) {
+            case BasicInfo.REQ_INSERT_ACTIVITY:
+                if (resultCode == RESULT_OK) {
+                    loadMemoListData();
+                }
+                break;
+
+            case BasicInfo.REQ_VIEW_ACTIVITY:
+                loadMemoListData();
+                break;
+            default:
+        }
     }
 
     private void checkDangerousPermissions() {
@@ -282,9 +309,47 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         return photoUriStr;
     }
 
-    //
-    public void viewMemo(int index){
-        Log.d(TAG,"리스트아이템이 클릭될때 수정조회 화면으로 전환할수있다.");
+    //리스틀클릭시 입력화면으로
+    public void viewMemo(int index,String callMethod) {
+        Log.d(TAG, callMethod + ">" + "MultimemoMainActivity viewMemo() ");
+        //클릭된 메모리스트 아이템 어뎁더 리스트 컬렉션에서 확득
+        MemoListItem item = (MemoListItem) mMemoListAdapter.getItem(index);
+
+        //메모보기 액티비티 뜨우기
+        Intent intent = new Intent(getApplicationContext(), MemoInsertActivity.class);
+        //부가정보 넘기기
+        /**
+         * itemId =memoId;
+         * objItems = new Object[10];
+         * objItems[0] = memoDate;
+         * objItems[1] = memoText;
+         * objItems[2] = id_hand_writing;
+         * objItems[3] = uri_handwriting;
+         * objItems[4] = id_phto;
+         * objItems[5] = uri_photo;
+         * objItems[6] = id_video;
+         * objItems[7] = uri_video;
+         * objItems[8] = id_voice;
+         * objItems[9] = uri_voice;
+         */
+        intent.putExtra(BasicInfo.KEY_MEMO_MODE, BasicInfo.MODE_VIEW);
+        intent.putExtra(BasicInfo.KEY_MEMO_ID,   item.getId());
+        intent.putExtra(BasicInfo.KEY_MEMO_DATE, item.getData(0));
+        intent.putExtra(BasicInfo.KEY_MEMO_TEXT, item.getData(1));
+
+        intent.putExtra(BasicInfo.KEY_ID_HANDWRITING,  item.getData(2));
+        intent.putExtra(BasicInfo.KEY_URI_HANDWRITING, item.getData(3));
+
+        intent.putExtra(BasicInfo.KEY_ID_PHOTO,  item.getData(4));
+        intent.putExtra(BasicInfo.KEY_URI_PHOTO, item.getData(5));
+
+        intent.putExtra(BasicInfo.KEY_ID_VIDEO,  item.getData(6));
+        intent.putExtra(BasicInfo.KEY_URI_VIDEO, item.getData(7));
+
+        intent.putExtra(BasicInfo.KEY_ID_VOICE,  item.getData(8));
+        intent.putExtra(BasicInfo.KEY_URI_VOICE, item.getData(9));
+
+        startActivityForResult(intent, BasicInfo.REQ_VIEW_ACTIVITY);
     }
 
 }
