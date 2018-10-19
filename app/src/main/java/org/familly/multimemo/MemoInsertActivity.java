@@ -111,6 +111,8 @@ public class MemoInsertActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_insert);
 
+        Log.d(TAG, "MemoInsertActivity onCreate() 호출");
+
         titleBackgroundButton = (TitleBackgroundButton) findViewById(R.id.button_insertTitle);
         mPhoto = (ImageView) findViewById(R.id.image_insertPhoto);
         mMemoEidt = (EditText) findViewById(R.id.edit_insertMemo);
@@ -516,6 +518,7 @@ public class MemoInsertActivity extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener dataSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            Log.d(TAG, "MemoInsertActivity DatePickerDialog.OnDateSetListener onDateSet() 호출");
             mCalendar.set(year, month, dayOfMonth);
             insertDateButton.setText(year + "년 " + (month + 1) + "월 " + dayOfMonth + "일");
         }
@@ -559,7 +562,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                     }
                 });
                 break;
-            case BasicInfo.CONTENT_PHOTO:
+            case BasicInfo.CONTENT_PHOTO: //새메모일경우
 
                 builder = new AlertDialog.Builder(this);
                 mSelectdContentArray = R.array.array_photo;

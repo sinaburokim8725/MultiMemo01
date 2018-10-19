@@ -23,6 +23,8 @@ public  class BasicInfo {
     //
     public static final int CONFIRM_TEXT_INPUT = 3002;
 
+    public static final int IMAGE_CANNOT_STORED = 1002;
+
     //사진클릭 첵크상태에따른 이동할 액티비티 응답코드
     public static final int REQ_PHOTO_CAPTURE_ACTIVITY   = 1501;
     public static final int REQ_PHOTO_SELECTION_ACTIVITY = 1502;
