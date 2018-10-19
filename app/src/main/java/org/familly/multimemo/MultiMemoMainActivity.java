@@ -120,26 +120,6 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         //
         checkDangerousPermissions();
     }
-    //다른 액티버티의 응답처리
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "MultiMemoMainActivity  onActivityResult() 콜백함수 호출됨.");
-
-        switch (requestCode) {
-            case BasicInfo.REQ_INSERT_ACTIVITY:
-                if (resultCode == RESULT_OK) {
-                    loadMemoListData();
-                }
-                break;
-
-            case BasicInfo.REQ_VIEW_ACTIVITY:
-                loadMemoListData();
-                break;
-            default:
-        }
-    }
-
     private void checkDangerousPermissions() {
         //문자배열로  퍼미션들 초기화 시켜준다.
         String[] permissions = {
@@ -220,6 +200,7 @@ public class MultiMemoMainActivity extends AppCompatActivity {
     }
 
     //end
+
     //실제 데이터베이스에서 데이터를 가져오는 부분 구현필요.
     public int loadMemoListData() {
         String sql = "SELECT _id, input_date,content_text,"
@@ -248,8 +229,11 @@ public class MultiMemoMainActivity extends AppCompatActivity {
                 String inputDate   = rCursor.getString(1);
                 //리스트를 보여주는 화면에서는 메모내용이 길경우 잘라서 보여주고
                 //상세화면에서 모든것을 보여주는 것으로 한다.
-                if (inputDate.length() > 10) {
-                    inputDate = inputDate.substring(0, 10);
+                if (inputDate != null) {
+
+                    if (inputDate.length() > 10) {
+                        inputDate = inputDate.substring(0, 10);
+                    }
                 }
                 String contentText = rCursor.getString(2);
                 String photoId = rCursor.getString(3);
@@ -284,7 +268,6 @@ public class MultiMemoMainActivity extends AppCompatActivity {
 
         return recordCount;
     }
-
     /**
      * 사진 데이터 URI 가져오기
      * @param photoId
@@ -310,6 +293,7 @@ public class MultiMemoMainActivity extends AppCompatActivity {
     }
 
     //리스틀클릭시 입력화면으로
+
     public void viewMemo(int index,String callMethod) {
         Log.d(TAG, callMethod + ">" + "MultimemoMainActivity viewMemo() ");
         //클릭된 메모리스트 아이템 어뎁더 리스트 컬렉션에서 확득
@@ -350,6 +334,26 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         intent.putExtra(BasicInfo.KEY_URI_VOICE, item.getData(9));
 
         startActivityForResult(intent, BasicInfo.REQ_VIEW_ACTIVITY);
+    }
+
+    //다른 액티버티의 응답처리
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "MultiMemoMainActivity  onActivityResult() 콜백함수 호출됨.");
+
+        switch (requestCode) {
+            case BasicInfo.REQ_INSERT_ACTIVITY:
+                if (resultCode == RESULT_OK) {
+                    loadMemoListData();
+                }
+                break;
+
+            case BasicInfo.REQ_VIEW_ACTIVITY:
+                loadMemoListData();
+                break;
+            default:
+        }
     }
 
 }

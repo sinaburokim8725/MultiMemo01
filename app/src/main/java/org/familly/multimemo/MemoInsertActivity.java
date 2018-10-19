@@ -685,7 +685,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                     try {
                         resultPhotoBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(getPhotoUri));
                     } catch (FileNotFoundException e) {
-                        Log.e(TAG, "이미지 티코드중 예외발생", e);
+                        Log.e(TAG, "이미지 디코드중 예외발생", e);
                     }
                     mPhoto.setImageBitmap(resultPhotoBitmap);
                     isPhotoCaptured = true;

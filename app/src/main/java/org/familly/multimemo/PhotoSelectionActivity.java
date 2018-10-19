@@ -186,6 +186,9 @@ public class PhotoSelectionActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (gAlbumPhotoUri != null && resultPhotoBitmap != null) {
             intent.putExtra(BasicInfo.KEY_URI_PHOTO, gAlbumPhotoUri);
+            //선택된 이미지 정보와 함께 호출요청한 액티비티에 요청처리 보냄
+            setResult(RESULT_OK, intent);
+
             Log.d(TAG, "showParentActivity() 호출 (key,value) = "
                     + " ( " + BasicInfo.KEY_URI_PHOTO + " , " + gAlbumPhotoUri + " ) ");
 
