@@ -72,7 +72,7 @@ public class PhotoSelectionActivity extends AppCompatActivity {
                 gAlbumPhotoUri = uri;
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 //sinaburokim 원본크기?
-                options.inSampleSize = 1;
+                options.inSampleSize = 8;
                 try {
                     resultPhotoBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
                             null, options);
@@ -160,7 +160,7 @@ public class PhotoSelectionActivity extends AppCompatActivity {
             try {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 //원본크기의 1/(8*8) 크기
-                options.inSampleSize = 8;
+                options.inSampleSize = 10;
                 Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
                         null,
                         options);

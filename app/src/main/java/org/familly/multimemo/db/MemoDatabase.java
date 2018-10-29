@@ -19,7 +19,7 @@ public class MemoDatabase {
     public static String TABLE_PHOTO = "PHOTO";
     public static String TABLE_VIDEO = "VIDEO";
     public static String TABLE_VOICE = "VOICE";
-    public static String TABLE_HANDWRITHING = "HANDWRITING";
+    public static String TABLE_HANDWRITING = "HANDWRITING";
 
 
     //helper class defined
@@ -244,9 +244,9 @@ public class MemoDatabase {
             //end voice
 
             //start handwrithing table
-            println("creating table [" + TABLE_HANDWRITHING + "]");
+            println("creating table [" + TABLE_HANDWRITING + "]");
             //DROP EXISTING TABLE HANDWRITING
-            DROP_SQL = "DROP TABLE IF EXISTS " + TABLE_HANDWRITHING;
+            DROP_SQL = "DROP TABLE IF EXISTS " + TABLE_HANDWRITING;
 
             try {
                 db.execSQL(DROP_SQL);
@@ -254,7 +254,7 @@ public class MemoDatabase {
                 Log.e(TAG, "예외발생 create handwriting table", ex);
             }
             //create table handwriting
-            CREATE_SQL = "CREATE TABLE " + TABLE_HANDWRITHING + " ("
+            CREATE_SQL = "CREATE TABLE " + TABLE_HANDWRITING + " ("
                     + "_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                     + "uri TEXT ,"
                     + "create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
@@ -268,7 +268,7 @@ public class MemoDatabase {
             //create indeX handwriting
             println("creating index in table handwriting" );
 
-            CREATE_INDEX_SQL = "CREATE INDEX " + TABLE_HANDWRITHING + "_IDX ON " + TABLE_HANDWRITHING + "("
+            CREATE_INDEX_SQL = "CREATE INDEX " + TABLE_HANDWRITING + "_IDX ON " + TABLE_HANDWRITING + "("
                     + "uri"
                     + ")";
             try {

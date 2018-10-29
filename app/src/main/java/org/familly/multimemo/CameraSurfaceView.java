@@ -17,17 +17,17 @@ import java.io.IOException;
 public class CameraSurfaceView extends SurfaceView implements Callback {
     public static final String TAG = "DEBUG";
 
-    SurfaceHolder gSurfaceHolder;
-    Camera gCamera;
+    SurfaceHolder mSurfaceHolder;
+    Camera mCamera;
 
     public CameraSurfaceView(Context context) {
         super(context);
         //SurfaceHolder 객체 획득
-        gSurfaceHolder = getHolder();
+        mSurfaceHolder = getHolder();
         //SurfaceHolder 에 콜백 함수 등록
-        gSurfaceHolder.addCallback(this);
+        mSurfaceHolder.addCallback(this);
         //타입설정 사용중지되었음 . 필요할때 자동으로 설정됨
-        gSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
     }
 
@@ -46,7 +46,7 @@ public class CameraSurfaceView extends SurfaceView implements Callback {
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.d(TAG, "CameraSurfaceView  surfaceChanged() 호출");
 
-        gCamera.startPreview();
+        mCamera.startPreview();
 
     }
 
@@ -59,10 +59,10 @@ public class CameraSurfaceView extends SurfaceView implements Callback {
 
     public void openCamera() {
         Log.d(TAG, "CameraSurfaceView   openCamera() 호출 : ");
-        gCamera = Camera.open();
+        mCamera = Camera.open();
 
         try {
-            gCamera.setPreviewDisplay(gSurfaceHolder);
+            mCamera.setPreviewDisplay(mSurfaceHolder);
         } catch (IOException e) {
             Log.e(TAG, "Error Camera preview display", e);
         }
@@ -70,12 +70,12 @@ public class CameraSurfaceView extends SurfaceView implements Callback {
 
     public void stopCamera() {
         Log.d(TAG, "CameraSurfaceView   stopCamera() 호출 : ");
-        gCamera.stopPreview();
-        gCamera.release();
-        gCamera = null;
+        mCamera.stopPreview();
+        mCamera.release();
+        mCamera = null;
     }
     public Surface getSurface() {
-        return gSurfaceHolder.getSurface();
+        return mSurfaceHolder.getSurface();
     }
 
     /**
@@ -111,11 +111,22 @@ public class CameraSurfaceView extends SurfaceView implements Callback {
      * @return
      */
     public boolean capture(Camera.PictureCallback jpegHandler) {
-        if (gCamera != null) {
-            gCamera.takePicture(null, null, jpegHandler);
+        if (mCamera != null) {
+            mCamera.takePicture(null, null, jpegHandler);
             return true;
         } else {
             return false;
         }
+    }
+
+    public void stopPreview() {
+        mCamera.stopPreview();
+        mCamera.release();
+        mCamera = null;
+    }
+
+    public void startPreview() {
+        openCamera();
+        mCamera.startPreview();
     }
 }

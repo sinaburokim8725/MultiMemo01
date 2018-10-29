@@ -1,0 +1,62 @@
+private String insertVoice() {
+    Log.d(TAG, "MemoInsertActivity insertVoice() 호출");
+
+    String voiceName = null;
+
+    if (isVoiceRecorded) {
+        try {
+            //수정일경우
+            if (mMemoMode != null && ( mMemoMode.equals(BasicInfo.MODE_MODIFY) || mMemoMode.equals(BasicInfo.MODE_VIEW ))) {
+                Log.d(TAG, "이전 동영상정보 삭제");
+
+                String sql = "DELETE FROM " + MemoDatabase.TABLE_VOICE +
+                        " WHERE _ID = '" + mMediaVoiceId + "'";
+
+                Log.d(TAG, "sql : " + sql);
+
+                if (MultiMemoMainActivity.mDatabase != null) {
+                    MultiMemoMainActivity.mDatabase.execSQL(sql);
+                }
+
+
+                File previousFile = new File(BasicInfo.FOLDER_VOICE + mMediaVoiceUri);
+
+                if (previousFile.exists()) {
+                    previousFile.delete();
+                }
+
+            }
+
+            File voiceFolder = new File(BasicInfo.FOLDER_VOICE);
+
+            //폴더가 없다면 폴더를 생성한다.
+            if (!voiceFolder.isDirectory()) {
+                Log.d(TAG, "폴더생성 : " + voiceFolder);
+                videoFolder.mkdirs();
+            }
+
+            voiceName = createFileName();
+
+            File tempFile = new File(BasicInfo.FOLDER_VOICE + "recorded");
+            tempFile.renameTo(new File(BasicInfo.FOLDER_VOICE + voiceName));
+
+
+
+            if (voiceName != null) {
+                Log.d(TAG, "isVoiceRecorded   : " + isVoiceRecorded);
+
+                //insert voice info
+                String sql = "INSERT INTO " + MemoDatabase.TABLE_VOICE + " (uri) VALUES (" +
+                        "'" + voiceName + "'";
+
+                if (MultiMemoMainActivity.mDatabase != null) {
+                    MultiMemoMainActivity.mDatabase.execSQL(sql);
+                }
+            }
+
+        } catch (IOException ex) {
+            Log.e(TAG, "예외발생 : insertVoice() :", ex);
+        }
+    }
+    return voiceName;
+}

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="#ffffffff"
+    >
+    <LinearLayout
+        android:layout_width="90dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/layout_tools"
+        android:paddingTop="5dp"
+
+        >
+        <org.familly.multimemo.common.TitleBitmapButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_color"
+            android:drawableTop="@drawable/colorpalette"
+            android:drawablePadding="2dp"
+
+            android:text="@string/colorBtn"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="18dp"
+
+
+            />
+
+        <org.familly.multimemo.common.TitleBitmapButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_pen"
+            android:drawableTop="@drawable/penpalette"
+            android:drawablePadding="2dp"
+
+            android:text="@string/penBtn"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="18dp"
+
+
+            />
+        <org.familly.multimemo.common.TitleBitmapButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_eraser"
+
+            android:drawableTop="@drawable/eraser"
+            android:drawablePadding="2dp"
+
+            android:text="@string/eraseBtn"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="18dp"
+
+
+            />
+        <org.familly.multimemo.common.TitleBitmapButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_undo"
+
+            android:drawableTop="@drawable/undo"
+            android:drawablePadding="2dp"
+
+            android:text="@string/undoBtn"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="18dp"
+
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:id="@+id/layout_board"
+            android:layout_weight="1"
+
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            >
+        </LinearLayout>
+        <org.familly.multimemo.common.TitleBitmapButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_handwriting_save"
+            android:layout_marginTop="4dp"
+
+            android:text="@string/handwritingSaveBtn"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="#ff420000"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

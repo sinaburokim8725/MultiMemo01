@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+android:ellipsize="marquee"
+
+start's output will be : ...bccc
+end's output will be : aaab...
+middle's output will be : aa...cc
+marquee's output will be : aaabbbccc auto sliding from right to left
+
+If set, causes words that are longer than
+the view is wide to be ellipsized instead of
+broken in the middle.
+You will often also want to set scrollHorizontally or
+singleLine as well so that the text
+as a whole is also constrained to a single line
+instead of still allowed to be broken onto multiple lines.
+
+설정되어 있으면 View 보다 긴 단어가 중간에 끊기지 않고 줄임표가 됩니다.
+일반적으로 scrollHorizontally 또는 singleLine도
+설정하여 텍스트 전체가 한 줄로 제한되지 않고 여러 줄로
+분리되도록 할 수도 있습니다.
+
+
+
+
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <TextView
+        android:id="@+id/loading_selectedVideo"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+
+        android:text="@string/select_video_title"
+        android:textSize="25sp"
+        android:textColor="#ffffffff"
+        android:textAlignment="center"
+
+        android:gravity="center_vertical"
+        android:background="#ff555555"
+
+        android:ellipsize="marquee"
+        android:singleLine="true"
+
+        />
+    <LinearLayout
+        android:id="@+id/loading_bottomLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentBottom="true"
+        >
+        <org.familly.multimemo.common.TitleBitmapButton
+            android:id="@+id/loading_okBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/confirm_btn"
+            />
+        <org.familly.multimemo.common.TitleBitmapButton
+            android:id="@+id/loading_cancelBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel_btn"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

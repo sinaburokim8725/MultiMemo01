@@ -21,6 +21,7 @@ import org.familly.multimemo.common.TitleBitmapButton;
 import org.familly.multimemo.db.MemoDatabase;
 
 import java.io.File;
+import java.util.Locale;
 
 public class MultiMemoMainActivity extends AppCompatActivity {
     //디버거용
@@ -45,6 +46,11 @@ public class MultiMemoMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multi_memo_main);
+
+        //set current locale 설정
+        Locale currentLocale = getResources().getConfiguration().locale;
+        BasicInfo.LANGUAGE = currentLocale.getLanguage();
+        Log.d(TAG,"현재 언어 : " + BasicInfo.LANGUAGE);
 
         //sdcard  연결상태 첵크 check
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {

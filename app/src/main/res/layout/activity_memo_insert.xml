@@ -4,23 +4,6 @@
     android:layout_height="match_parent"
     android:background="#fffafad2"
     >
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_title"
-        android:layout_alignParentTop="true"
-        android:background="#ffffffff"
-        >
-        <org.familly.multimemo.common.TitleBackgroundButton
-            android:id="@+id/button_insertTitle"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentTop="true"
-            android:text="메모 추가"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            />
-    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +12,8 @@
         android:background="#ff98fb98"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_below="@+id/layout_title"
+        android:layout_alignParentTop="true"
+
         >
         <LinearLayout
             android:layout_width="wrap_content"
@@ -43,7 +27,7 @@
                 android:layout_width="200dp"
                 android:layout_height="160dp"
                 android:id="@+id/image_insertPhoto"
-                android:scaleType="fitCenter"
+                android:scaleType="centerInside"
                 android:src="@drawable/person_add"
                 android:background="#fffeff85"
                 />
@@ -58,7 +42,7 @@
                     android:layout_width="100dp"
                     android:layout_height="76dp"
                     android:id="@+id/button_insertVideo"
-                    android:text="동영상"
+                    android:text="@string/video_btn"
                     android:textSize="18dp"
                     android:textStyle="bold"
                     android:textColor="#ff420000"/>
@@ -66,7 +50,7 @@
                     android:layout_width="100dp"
                     android:layout_height="76dp"
                     android:id="@+id/button_insertVoice"
-                    android:text="음성"
+                    android:text="@string/voice_btn"
                     android:textSize="18dp"
                     android:textStyle="bold"
                     android:textColor="#ff420000"/>
@@ -77,9 +61,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/layout_memo"
             android:orientation="horizontal"
-            android:background="#ff9370db"
             android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
+            android:background="#ff9370db"
             >
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -96,13 +80,14 @@
                     android:textStyle="bold"
                     android:background="@drawable/memo_back"
                     />
-                <View
+                <ImageView
                     android:layout_width="200dp"
                     android:layout_height="160dp"
                     android:id="@+id/view_insertHandwriting"
                     android:layout_margin="5dp"
-                    android:visibility="gone"
                     android:background="@drawable/handwriting_back"
+                    android:scaleType="centerInside"
+                    android:visibility="gone"
                     />
             </FrameLayout>
             <LinearLayout
@@ -117,7 +102,7 @@
                     android:layout_width="100dp"
                     android:layout_height="76dp"
                     android:id="@+id/button_insertMemo"
-                    android:text="텍스트"
+                    android:text="@string/text_btn"
                     android:textSize="18dp"
                     android:textStyle="bold"
                     android:textColor="#ff420000"
@@ -126,56 +111,89 @@
                     android:layout_width="100dp"
                     android:layout_height="76dp"
                     android:id="@+id/button_insertHandwriting"
-                    android:text="손글씨"
+                    android:layout_marginTop="10dp"
+
+                    android:text="@string/handwriting_btn"
                     android:textSize="18dp"
                     android:textStyle="bold"
                     android:textColor="#ff420000"
                     />
             </LinearLayout>
         </LinearLayout>
-        <org.familly.multimemo.common.TitleBitmapButton
-            android:layout_width="240dp"
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button_insertDate"
-            android:text="달 력"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:textColor="#ff420000"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_margin="5dp"
-            />
+            android:id="@+id/layout_date"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center_horizontal"
+
+            >
+            <org.familly.multimemo.common.TitleBitmapButton
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_insertDate"
+                android:layout_gravity="center_horizontal"
+                />
+            <org.familly.multimemo.common.TitleBitmapButton
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_insertTime"
+
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_horizontal"
+                />
+
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:id="@+id/layout_button"
-        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/layout_content"
         android:background="#ffe0ffff"
-        android:paddingTop="5dp"
         >
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_gravity="center_horizontal"
             >
             <org.familly.multimemo.common.TitleBitmapButton
-                android:layout_width="100dp"
+                android:layout_width="90dp"
                 android:layout_height="48dp"
                 android:id="@+id/button_saveMemo"
-                android:text="저장"
+
+                android:text="@string/save_btn"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:textColor="#ff420000"
                 />
             <org.familly.multimemo.common.TitleBitmapButton
-                android:layout_width="100dp"
+                android:layout_width="90dp"
+                android:layout_height="48dp"
+                android:id="@+id/button_delete"
+                android:layout_marginLeft="20dp"
+
+                android:text="@string/delote_btn"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:textColor="#ff420000"
+                android:visibility="gone"
+                />
+            <org.familly.multimemo.common.TitleBitmapButton
+                android:layout_width="90dp"
                 android:layout_height="48dp"
                 android:id="@+id/button_cancelMemo"
-                android:text="닫기"
+                android:layout_marginLeft="20dp"
+
+                android:text="@string/close_btn"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:textColor="#ff420000"

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <GridView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/grid_color"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_button"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:layout_gravity="center_horizontal"
+
+        >
+        <org.familly.multimemo.common.TitleBitmapButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_close"
+
+            android:drawableLeft="@drawable/cancel_btn"
+            android:drawablePadding="2dp"
+
+            android:text="@string/closeBtn"
+            />
+    </LinearLayout>
+
+</LinearLayout>
