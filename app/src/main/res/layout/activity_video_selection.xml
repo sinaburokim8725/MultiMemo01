@@ -69,6 +69,19 @@ instead of still allowed to be broken onto multiple lines.
             android:text="@string/cancel_btn"
             />
     </LinearLayout>
+    <ListView
+        android:id="@+id/loading_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loading_selectedVideo"
+        android:layout_above="@+id/loading_bottomLayout"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:spacing="5dp"
+
+        />
 
 
 </RelativeLayout>

@@ -41,7 +41,9 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".VideoRecordingActivity" />
-        <activity android:name=".VideoSelectionActivity"></activity>
+        <activity android:name=".VideoSelectionActivity" />
+        <activity android:name=".VideoPlayActivity" />
+        <activity android:name=".VoiceRecordingActivity"></activity>
     </application>
 
 </manifest>

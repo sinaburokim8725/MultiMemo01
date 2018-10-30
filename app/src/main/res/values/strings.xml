@@ -30,4 +30,6 @@
     <string name="video_recording_stop_title">녹화 중지</string>
     <string name="select_video_title">동영상 파일</string>
     <string name="confirm_btn">확인</string>
+    <string name="minute_second">00:00</string>
+    <string name="audio_recording_start_title">녹음 시작</string>
 </resources>

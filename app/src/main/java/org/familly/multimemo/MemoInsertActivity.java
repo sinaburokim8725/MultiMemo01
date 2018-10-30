@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -446,7 +445,7 @@ public class MemoInsertActivity extends AppCompatActivity {
 
     //음성녹화화면
     public void showVoiceRecordingActivity() {
-        Intent intent = new Intent(getApplicationContext(), VoiceREcordingActivity.class);
+        Intent intent = new Intent(getApplicationContext(), VoiceRecordingActivity.class);
         startActivityForResult(intent, BasicInfo.REQ_VOICE_RECORDING_ACTIVITY);
     }
 
