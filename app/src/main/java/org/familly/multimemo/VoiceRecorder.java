@@ -16,12 +16,12 @@ class VoiceRecorder implements MediaPlayer.OnCompletionListener,MediaPlayer.OnEr
     static final String SAMPLE_PATH_KEY = "sample_path";
     static final String SAMPLE_LENGTH_KEY = "sample_length";
     static final int IDLE_STATE = 0;
-    private static final String TEMP_STORAGE = "/data/data/org.familly.multimemo/voice/";
-    private static final String SAMPLE_PREFIX = "recording";
-    private static final int SDCARD_ACCESS_ERROR = 1;
-    private static final int INTERNAL_ERROR = 2;
-    private static final int IN_CALL_RECORD_ERROR = 3;
-    private static final int RECORDING_STATE = 1;
+    public static final String TEMP_STORAGE = "/data/data/org.familly.multimemo/voice/";
+    public static final String SAMPLE_PREFIX = "recording";
+    public static final int SDCARD_ACCESS_ERROR = 1;
+    public static final int INTERNAL_ERROR = 2;
+    public static final int IN_CALL_RECORD_ERROR = 3;
+    public static final int RECORDING_STATE = 1;
 
 
     Bundle recorderState;
@@ -47,7 +47,7 @@ class VoiceRecorder implements MediaPlayer.OnCompletionListener,MediaPlayer.OnEr
     }
 
     //사용자정의 메소드 START
-    public void saveState() {
+    public void saveState(Bundle recorderState) {
         recorderState.putString(SAMPLE_PATH_KEY, mSampleFile.getAbsolutePath());
         recorderState.putInt(SAMPLE_LENGTH_KEY, mSampleLength);
 

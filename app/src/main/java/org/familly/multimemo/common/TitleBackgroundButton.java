@@ -125,8 +125,8 @@ public class TitleBackgroundButton extends AppCompatButton {
         //사각형 둘레계산
         Rect rBounds = new Rect();
         paint.getTextBounds(titleText,0, titleText.length(),rBounds);
-        float tWidth = ((float)vWidth - rBounds.width())/2.0F;
-        float tHeight = ((float)vHeight -rBounds.height())/2.0F + rBounds.height();
+        float tWidth  = ((float) vWidth - rBounds.width()) / 2.0F;
+        float tHeight = ((float) vHeight - rBounds.height()) / 2.0F + rBounds.height();
 
         //draw titile text
         canvas.drawText(titleText,tWidth,tHeight,paint);
@@ -167,9 +167,6 @@ public class TitleBackgroundButton extends AppCompatButton {
     public void setDefaultTypeface(Typeface defaultTypeface) {
         this.defaultTypeface = defaultTypeface;
         paintChanged = true;
-    }
-    public String getText(){
-        return titleText;
     }
 
     public String getTitleText() {

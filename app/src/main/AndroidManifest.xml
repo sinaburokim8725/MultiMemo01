@@ -43,7 +43,8 @@
         <activity android:name=".VideoRecordingActivity" />
         <activity android:name=".VideoSelectionActivity" />
         <activity android:name=".VideoPlayActivity" />
-        <activity android:name=".VoiceRecordingActivity"></activity>
+        <activity android:name=".VoiceRecordingActivity" />
+        <activity android:name=".VoicePlayActivity"></activity>
     </application>
 
 </manifest>

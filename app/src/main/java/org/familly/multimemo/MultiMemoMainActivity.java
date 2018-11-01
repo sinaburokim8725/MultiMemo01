@@ -15,12 +15,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.familly.multimemo.common.TitleBitmapButton;
 import org.familly.multimemo.db.MemoDatabase;
 
 import java.io.File;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Locale;
 
 public class MultiMemoMainActivity extends AppCompatActivity {
@@ -41,6 +44,7 @@ public class MultiMemoMainActivity extends AppCompatActivity {
 
     //메모 database 인스턴스 객체
     public static MemoDatabase mDatabase = null;
+    TextView itemCountText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +97,7 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         mMemoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                viewMemo(position,"onTtemClick()");
+                viewMemo(position);
             }
         });
 
@@ -111,7 +115,7 @@ public class MultiMemoMainActivity extends AppCompatActivity {
                 startActivityForResult(mIntent,BasicInfo.REQ_INSERT_ACTIVITY);
             }
         });
-        //종료
+        //종료버튼
         TitleBitmapButton cButton =
                 (TitleBitmapButton) findViewById(R.id.button_close);
         cButton.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +126,8 @@ public class MultiMemoMainActivity extends AppCompatActivity {
 
             }
         });
-
+        //추가: 리스트 화면 변경으로 리스트 총건수 보여주기 추가.
+        itemCountText = (TextView) findViewById(R.id.itemCount);
         //
         checkDangerousPermissions();
     }
@@ -235,12 +240,23 @@ public class MultiMemoMainActivity extends AppCompatActivity {
                 String inputDate   = rCursor.getString(1);
                 //리스트를 보여주는 화면에서는 메모내용이 길경우 잘라서 보여주고
                 //상세화면에서 모든것을 보여주는 것으로 한다.
-                if (inputDate != null) {
+                if (inputDate != null && inputDate.length() > 10) {
 
-                    if (inputDate.length() > 10) {
-                        inputDate = inputDate.substring(0, 10);
+                    try {
+                        Date inDate = BasicInfo.dateFormat.parse(inputDate);
+
+                        if (BasicInfo.LANGUAGE.equals("ko")) {
+                            inputDate = BasicInfo.dateNameformat2.format(inDate);
+                        } else {
+                            inputDate = BasicInfo.dateNameFormat3.format(inDate);
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
+                } else {
+                    inputDate = "";
                 }
+
                 String contentText = rCursor.getString(2);
                 String photoId = rCursor.getString(3);
                 String photoUriStr = getPhotoUriStr(photoId);
@@ -251,12 +267,20 @@ public class MultiMemoMainActivity extends AppCompatActivity {
                 String voiceId = rCursor.getString(5);
                 String voiceUriStr = null;
 
-                String handWritingId = rCursor.getString(6);
-                String handWrithingUriStr = null;
+                String handwritingId = rCursor.getString(6);
+                String handwritingUriStr = null;
+
+                //Stag3 추가
+                handwritingUriStr = getHandwritingUriStr(handwritingId);
+
+                //stage4 추가
+                videoUriStr = getVideoUriStr(videoId);
+                voiceUriStr = getVoiceUriStr(voiceId);
+
 
                 //MomoListItem 객체생성
                 MemoListItem memoListItem = new MemoListItem(memoId, inputDate, contentText,
-                        handWritingId, handWrithingUriStr,
+                        handwritingId, handwritingUriStr,
                         photoId, photoUriStr,
                         videoId, videoUriStr,
                         voiceId, voiceUriStr);
@@ -270,6 +294,10 @@ public class MultiMemoMainActivity extends AppCompatActivity {
             //아답타에게 데이터가 변경되었으며 데이터셋을 반영한 뷰가 자체적으로
             //새로고쳐져야함을 알린다 즉 콜백함수 getView()호출
             mMemoListAdapter.notifyDataSetChanged();
+
+            //메인화면 변경으로 인하 리스트 총건수 표시 추가
+            itemCountText.setText(recordCount + " " + getResources().getString(R.string.itme_count));
+            itemCountText.invalidate();
         }
 
         return recordCount;
@@ -279,29 +307,82 @@ public class MultiMemoMainActivity extends AppCompatActivity {
      * @param photoId
      * @return
      */
-    private String getPhotoUriStr(String photoId) {
+    public String getPhotoUriStr(String photoId) {
         String photoUriStr = null;
         //photo id 가 유효할경우 쿼리해서 사진 id를 가져온다.
         if (photoId != null && !photoId.equals("-1")) {
             //photo id 는 문자열이고 포토테이블의 _id는 정수다 정수로 변경해서 조건절에 비교
             //해야 하지않을까?
             String sql = "SELECT uri FROM " + MemoDatabase.TABLE_PHOTO + " WHERE _id = "+ photoId + "";
-            Cursor pCursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
-            if (pCursor.moveToNext()) {
-                photoUriStr = pCursor.getString(0);
+            Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
+            if (cursor.moveToNext()) {
+                photoUriStr = cursor.getString(0);
             }
-            pCursor.close();
+            cursor.close();
 
-        } else if (photoId == null || photoId.equals("-1")) {
+        } else {
             photoUriStr = "";
         }
         return photoUriStr;
     }
+    //손글씨 uri정보 가져오기
+    public String getHandwritingUriStr(String handwritingId) {
+        String handwritingUriStr = null;
+
+        if (handwritingId != null && handwritingId.trim().length() > 0 && !handwritingId.equals("-1")) {
+
+            String sql = "SELECT uri FROM " + MemoDatabase.TABLE_HANDWRITING + " WHERE _id = "+ handwritingId + "";
+            Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
+            if (cursor.moveToNext()) {
+                handwritingUriStr = cursor.getString(0);
+            }
+            cursor.close();
+
+        } else {
+            handwritingUriStr = "";
+        }
+        return handwritingUriStr;
+    }
+    //동영상 uri정보 가져오기
+    public String getVideoUriStr(String videoId) {
+        String videoUriStr = null;
+
+        if (videoId != null && videoId.trim().length() > 0 && !videoId.equals("-1")) {
+
+            String sql = "SELECT uri FROM " + MemoDatabase.TABLE_VIDEO + " WHERE _id = "+ videoId + "";
+            Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
+            if (cursor.moveToNext()) {
+                videoUriStr = cursor.getString(0);
+            }
+            cursor.close();
+
+        } else {
+            videoUriStr = "";
+        }
+        return videoUriStr;
+    }
+    //음성   uri정보 가져오기
+    public String getVoiceUriStr(String voiceId) {
+        String voiceUriStr = null;
+
+        if (voiceId != null && voiceId.trim().length() > 0 && !voiceId.equals("-1")) {
+
+            String sql = "SELECT uri FROM " + MemoDatabase.TABLE_VOICE + " WHERE _id = " + voiceId + "";
+            Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
+            if (cursor.moveToNext()) {
+                voiceUriStr = cursor.getString(0);
+            }
+            cursor.close();
+
+        } else {
+            voiceUriStr = "";
+        }
+        return voiceUriStr;
+    }
 
     //리스틀클릭시 입력화면으로
-
-    public void viewMemo(int index,String callMethod) {
-        Log.d(TAG, callMethod + ">" + "MultimemoMainActivity viewMemo() ");
+    public void viewMemo(int index) {
+        Log.d(TAG, "MultimemoMainActivity viewMemo() 호출");
         //클릭된 메모리스트 아이템 어뎁더 리스트 컬렉션에서 확득
         MemoListItem item = (MemoListItem) mMemoListAdapter.getItem(index);
 

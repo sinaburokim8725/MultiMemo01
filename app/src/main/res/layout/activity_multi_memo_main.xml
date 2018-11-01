@@ -2,68 +2,72 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fffffffd"
+    android:background="#ffffffff"
     >
     <RelativeLayout
+        android:id="@+id/layout_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/layout_title"
-        android:background="#ffccffcc"
         android:layout_alignParentTop="true"
-        android:paddingTop="6dp"
+        android:background="#ffffffff"
         >
-        <org.familly.multimemo.common.TitleBackgroundButton
-            android:id="@+id/button_titlebackground"
+        <TextView
+            android:id="@+id/itemCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="멀티 메모"
-            android:textSize="18dp"
-            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_alignParentTop="true"
+            android:gravity="right"
 
+            android:text=""
+            android:textColor="#ffc35d03"
+            android:textSize="12dp"
+            android:textStyle="bold"
             />
+
     </RelativeLayout>
     <ListView
+        android:id="@+id/list_memo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/list_memo"
-        android:background="#ffff66ff"
         android:layout_below="@+id/layout_title"
         android:layout_above="@+id/layout_button"
-        android:divider="#ff0033cc"
-        android:dividerHeight="1dp"
-        android:listSelector="#ff33ffff"
-        ></ListView>
+        android:divider="#00000000"
+        android:listSelector="#00000000"
+        android:cacheColorHint="#00000000"
+
+        />
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/layout_button"
         android:orientation="vertical"
-        android:background="#ffff0066"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_alignParentBottom="true"
-        android:padding="4dp"
+
         >
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="#ff0066ff"
             android:layout_gravity="center_horizontal"
-            android:paddingTop="5dp"
             >
 
             <org.familly.multimemo.common.TitleBitmapButton
                 android:id="@+id/button_newmemo"
-                android:layout_width="100dp"
+                android:layout_width="140dp"
                 android:layout_height="48dp"
-                android:text="새메모"
+                android:text="@string/new_title"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:textColor="#ff420000"/>
             <org.familly.multimemo.common.TitleBitmapButton
                 android:id="@+id/button_close"
-                android:layout_width="100dp"
+                android:layout_width="140dp"
                 android:layout_height="48dp"
-                android:text="닫기"
+                android:text="@string/close_btn"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:textColor="#ff420000"

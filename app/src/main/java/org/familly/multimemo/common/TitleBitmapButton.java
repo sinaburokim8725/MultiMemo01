@@ -183,13 +183,16 @@ public class TitleBitmapButton extends AppCompatButton {
 
         //bitmap
         Bitmap iconBitmap = iconNormalBitmap;
+        if (iconStatus == 1) {
+            iconBitmap = iconClickedBitmap;
+        }
 
         if (iconBitmap != null) {
             int iconWidth = iconBitmap.getWidth();
             int iconHeight = iconBitmap.getHeight();
             int bitmapX =0;
 
-            switch (bitmapX) {
+            switch (bitmapAlign) {
                 case BITMAP_ALIGN_CENTER:
                     bitmapX = (cWidth - iconWidth)/2;
                     break;

@@ -32,4 +32,12 @@
     <string name="confirm_btn">확인</string>
     <string name="minute_second">00:00</string>
     <string name="audio_recording_start_title">녹음 시작</string>
+    <string name="sdcard_access_error">SD카드 접근 오류입니다.</string>
+    <string name="in_call_record_error">내부오류입니다.</string>
+    <string name="audio_recording_title">음성녹음</string>
+    <string name="audio_recording_stop_title">녹음 중지</string>
+    <string name="text_slash">/</string>
+    <string name="audio_play_title">음성재생</string>
+    <string name="timer_format">%02d:%02d</string>
+    <string name="itme_count">건</string>
 </resources>

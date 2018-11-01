@@ -95,6 +95,8 @@ public class MemoDatabase {
     private void println(String msg) {
         Log.d(TAG,msg);
     }
+
+
     /**
      * Database Helper inner class
      */
