@@ -28,7 +28,7 @@ public class CoverFlow extends Gallery {
         init();
     }
 
-    //최기하
+
     //When this property is set to true, this ViewGroup supports static transformations on children; this causes getChildStaticTransformation(View, Transformation) to be invoked when a child is drawn. Any subclass overriding getChildStaticTransformation(View, Transformation) should set this property to true.
     //이 속성을 true로 설정하면이 ViewGroup은 자식에 대한 정적 변환을 지원합니다.
     // 이로 인해 자식을 그릴 때 getChildStaticTransformation (View, Transformation)이 호출됩니다.
