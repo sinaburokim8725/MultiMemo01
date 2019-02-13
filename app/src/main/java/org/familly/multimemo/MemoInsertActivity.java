@@ -621,7 +621,7 @@ public class MemoInsertActivity extends AppCompatActivity {
         sql = "INSERT INTO " + MemoDatabase.TABLE_MEMO +
                 " ( INPUT_DATE,CONTENT_TEXT,ID_PHOTO,ID_VIDEO,ID_VOICE,ID_HANDWRITING) " +
                 "VALUES (" +
-                "DATATIME('" + mDateStr + "'), " +
+                "DATETIME('" + mDateStr + "'), " +
                 "'" + mMemoStr + "'," +
                 "'" + photoId + "'," +
                 "'" + videoId + "'," +
