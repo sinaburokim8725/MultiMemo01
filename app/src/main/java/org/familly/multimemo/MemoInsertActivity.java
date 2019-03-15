@@ -946,7 +946,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                     Log.d(TAG, "isPhotoCaptured   : " + isPhotoCaptured);
                     //insert picture info
                     String sql = "INSERT INTO " + MemoDatabase.TABLE_PHOTO + " (uri) VALUES (" +
-                            "'" + photoName + "'";
+                            "'" + photoName + "'"+")";
                     if (MultiMemoMainActivity.mDatabase != null) {
                         MultiMemoMainActivity.mDatabase.execSQL(sql);
                     }
