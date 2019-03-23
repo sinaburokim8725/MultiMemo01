@@ -17,7 +17,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class HandWritingMakingActivity extends AppCompatActivity {
-    private static final String TAG = "DEBUG";
+
+    public static final String LOG_TAG = "MultiMemo > "+HandWritingMakingActivity.class.getSimpleName();
 
     LinearLayout      gAddedLayout;
     TextView          gSizeLegendTxt;
@@ -42,38 +43,59 @@ public class HandWritingMakingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hand_writing_making);
 
+        Log.d(LOG_TAG, "onCreate Start");
+
+
         setTopLayout();
 
         setBottomLayout();
 
         setWritingBoard();
+
+        Log.d(LOG_TAG, "onCreate End");
+
     }
 
     private void setWritingBoard() {
+        Log.d(LOG_TAG, "setWritingBoard Start");
+
         LinearLayout boardLayout = (LinearLayout) findViewById(R.id.layout_board);
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
         );
+
         gWritingBoard = new HandwritingView(this);
+
         gWritingBoard.setLayoutParams(params);
+
         gWritingBoard.setPadding(2, 2, 2, 2);
 
         boardLayout.addView(gWritingBoard);
+
+        Log.d(LOG_TAG, "setWritingBoard End");
+
     }
 
     private void setBottomLayout() {
+        Log.d(LOG_TAG, "setBottomLayout Start");
+
         gHandwritingSaveBtn = (TitleBitmapButton) findViewById(R.id.button_handwriting_save);
+
         gHandwritingSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveHandwritingMaking();
             }
         });
+
+        Log.d(LOG_TAG, "setBottomLayout End");
     }
 
     private void saveHandwritingMaking() {
-        Log.d(TAG, "HnadwritingMakingActivity saveHandwritingMaking() 호출");
+        Log.d(LOG_TAG, "saveHandwritingMaking Start");
+
         checkHandwritingFolder();
         String handWritingName = "made";
         File file = new File(BasicInfo.FOLDER_HANDWRITING + handWritingName);
@@ -89,22 +111,31 @@ public class HandWritingMakingActivity extends AppCompatActivity {
             handImage.close();
 
         } catch (Exception e) {
-            Log.e(TAG,"예외발생 saveHandwritingMaking() ",e);
+            Log.e(LOG_TAG,"예외발생 saveHandwritingMaking() ",e);
         }
         setResult(RESULT_OK);
+
+        Log.d(LOG_TAG, "saveHandwritingMaking End");
+
         finish();
     }
 
     private void checkHandwritingFolder() {
+        Log.d(LOG_TAG, "checkHandwritingFolder Start");
+
         File handwritingFolder = new File(BasicInfo.FOLDER_HANDWRITING);
         if (!handwritingFolder.isDirectory()) {
-            Log.d(TAG, "폴던없음 폴더생성함:");
+            Log.d(LOG_TAG, "폴던없음 폴더생성함:");
             handwritingFolder.mkdirs();
         }
+
+        Log.d(LOG_TAG, "checkHandwritingFolder End");
+
     }
 
     public void setTopLayout() {
-        Log.d(TAG, "HandwritingMakingActivity  setTopLayout() 호출");
+        Log.d(LOG_TAG, "setTopLayout Start");
+
 
         LinearLayout toolsLayout = (LinearLayout) findViewById(R.id.layout_tools);
 
@@ -138,7 +169,7 @@ public class HandWritingMakingActivity extends AppCompatActivity {
                 PenPaletteDialogActivity.mSelectedListener = new OnPenSelectedListener() {
                     @Override
                     public void onPenSelected(int penSize) {
-                        Log.d(TAG, "HandwritingMakingActivity 펜굵기가 선택되었음 선택된 펜굵기 :" + penSize);
+                        Log.d(LOG_TAG, "HandwritingMakingActivity 펜굵기가 선택되었음 선택된 펜굵기 :" + penSize);
                         gSize = penSize;
                         gWritingBoard.updatePaintProperty(gColor, gSize);
                         displayPaintProperty();
@@ -246,13 +277,20 @@ public class HandWritingMakingActivity extends AppCompatActivity {
         toolsLayout.addView(gAddedLayout);
 
         //end
+        Log.d(LOG_TAG, "setTopLayout End");
+
     }
 
 
     private void displayPaintProperty() {
+        Log.d(LOG_TAG, "displayPaintProperty Start");
+
         gColorLegendBtn.setBackgroundColor(gColor);
         gSizeLegendTxt.setText("Size : " + gSize);
         gAddedLayout.invalidate();
+
+        Log.d(LOG_TAG, "displayPaintProperty End");
+
     }
 
 }

@@ -15,7 +15,8 @@ import java.io.IOException;
  * 카메라 미리보기를 위한 서피
  */
 public class CameraSurfaceView extends SurfaceView implements Callback {
-    public static final String TAG = "DEBUG";
+
+    public static final String LOG_TAG = "MultiMemo > "+CameraSurfaceView.class.getSimpleName();
 
     SurfaceHolder mSurfaceHolder;
     Camera mCamera;
@@ -33,48 +34,68 @@ public class CameraSurfaceView extends SurfaceView implements Callback {
 
     public CameraSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        Log.d(LOG_TAG, "CameraSurfaceView 객체생성");
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.d(TAG, "CameraSurfaceView   surfaceCreated() 호출 : ");
+        Log.d(LOG_TAG, "surfaceCreated Start");
 
         openCamera();
+
+        Log.d(LOG_TAG, "surfaceCreated End");
+
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.d(TAG, "CameraSurfaceView  surfaceChanged() 호출");
+        Log.d(LOG_TAG, "surfaceChanged Start");
 
         mCamera.startPreview();
+
+        Log.d(LOG_TAG, "surfaceChanged End");
 
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d(TAG, "CameraSurfaceView   surfaceDestroyed() 호출 : ");
+        Log.d(LOG_TAG, "surfaceDestroyed Start");
 
         stopCamera();
+
+        Log.d(LOG_TAG, "surfaceDestroyed End");
+
     }
 
     public void openCamera() {
-        Log.d(TAG, "CameraSurfaceView   openCamera() 호출 : ");
+        Log.d(LOG_TAG, "openCamera Start");
+
         mCamera = Camera.open();
 
         try {
             mCamera.setPreviewDisplay(mSurfaceHolder);
         } catch (IOException e) {
-            Log.e(TAG, "Error Camera preview display", e);
+            Log.e(LOG_TAG, "Error Camera preview display", e);
+        }finally {
+            Log.d(LOG_TAG, "openCamera End");
         }
     }
 
     public void stopCamera() {
-        Log.d(TAG, "CameraSurfaceView   stopCamera() 호출 : ");
+        Log.d(LOG_TAG, "stopCamera Start");
+
         mCamera.stopPreview();
         mCamera.release();
         mCamera = null;
+
+        Log.d(LOG_TAG, "stopCamera End");
+
     }
     public Surface getSurface() {
+        Log.d(LOG_TAG, "getSurface Start");
+
+        Log.d(LOG_TAG, "getSurface End");
+
         return mSurfaceHolder.getSurface();
     }
 
@@ -111,22 +132,42 @@ public class CameraSurfaceView extends SurfaceView implements Callback {
      * @return
      */
     public boolean capture(Camera.PictureCallback jpegHandler) {
+        Log.d(LOG_TAG, "capture Start");
+
+
         if (mCamera != null) {
             mCamera.takePicture(null, null, jpegHandler);
+
+            Log.d(LOG_TAG, "capture true End");
+
             return true;
         } else {
+
+            Log.d(LOG_TAG, "capture false End");
+
             return false;
         }
     }
 
     public void stopPreview() {
+        Log.d(LOG_TAG, "stopPreview Start");
+
+
         mCamera.stopPreview();
         mCamera.release();
         mCamera = null;
+
+        Log.d(LOG_TAG, "stopPreview End");
+
     }
 
     public void startPreview() {
+        Log.d(LOG_TAG, "startPreview Start");
+
         openCamera();
         mCamera.startPreview();
+
+        Log.d(LOG_TAG, "startPreview End");
+
     }
 }

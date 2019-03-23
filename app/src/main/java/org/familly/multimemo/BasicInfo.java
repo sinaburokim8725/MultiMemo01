@@ -5,7 +5,9 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 
 public  class BasicInfo {
-    private static final String TAG = "DEBUG";
+
+    public static final String LOG_TAG = "MultiMemo > "+BasicInfo.class.getSimpleName();
+
 
     public static String LANGUAGE = "";
 
@@ -99,7 +101,9 @@ public  class BasicInfo {
 
 
     public static boolean isAbsoluteVideoPath(String tempVideoUri) {
-        Log.d(TAG, "궁금하네 BasicInfo isAbsoluteVidePath() tempVideoUri : " + tempVideoUri);
+        
+
+        Log.d(LOG_TAG, "궁금하네 BasicInfo isAbsoluteVidePath() tempVideoUri : " + tempVideoUri);
         if (tempVideoUri.startsWith(URI_MEDIA_FORMAT)) {
             return false;
         } else {

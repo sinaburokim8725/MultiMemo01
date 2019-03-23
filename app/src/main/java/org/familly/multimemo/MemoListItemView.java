@@ -4,12 +4,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MemoListItemView extends LinearLayout {
+    private static final String LOG_TAG = "MultiMemo > "+MemoListItemView.class.getSimpleName();
+
 
     private ImageView itemPhoto ,itemVideo,itemVoice,itemHandText;
     private TextView itemText,itemDate;
@@ -22,76 +25,90 @@ public class MemoListItemView extends LinearLayout {
      */
     public MemoListItemView(Context context) {
         super(context);
+        Log.d(LOG_TAG, "MemoListItemView Start");
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         inflater.inflate(R.layout.memo_listitem_form,this,true);
         //
         itemPhoto = (ImageView) findViewById(R.id.image_itempPoto);
+
         itemDate = (TextView) findViewById(R.id.text_itemDate);
+
         itemText = (TextView) findViewById(R.id.text_itemText);
+
         itemVideo = (ImageView) findViewById(R.id.image_itemVideoState);
+
         itemVoice = (ImageView) findViewById(R.id.image_itemVoiceState);
+
         itemHandText = (ImageView) findViewById(R.id.image_itemHandText);
+
+        Log.d(LOG_TAG, "MemoListItemView End");
+
     }
 
+
     /**
-     *
      * @param index
      * @param data
      */
-    public void setContents(int index,String data) {
-       switch(index){
+    public void setContents(int index, String data) {
+        Log.d(LOG_TAG, "setContents Start");
 
-           case 0:
-               itemDate.setText(data);
+        switch (index) {
 
-               break;
+            case 0:
+                itemDate.setText(data);
 
-           case 1:
-               itemText.setText(data);
+                break;
 
-               break;
+            case 1:
+                itemText.setText(data);
 
-           case 2:
-               if(data == null || data.equals("-1")|| data.equals("")) {
+                break;
 
-                   itemHandText.setImageBitmap(null);
+            case 2:
+                if (data == null || data.equals("-1") || data.equals("")) {
 
-               } else {
+                    itemHandText.setImageBitmap(null);
 
-                   itemHandText.setImageURI(Uri.parse(BasicInfo.FOLDER_PHOTO + data));
+                } else {
 
-               }
+                    itemHandText.setImageURI(Uri.parse(BasicInfo.FOLDER_PHOTO + data));
 
-               break;
+                }
 
-           case 3:
-               if(data == null || data.equals("-1")||data.equals("")) {
+                break;
 
-                   itemPhoto.setImageResource(R.drawable.person);
+            case 3:
+                if (data == null || data.equals("-1") || data.equals("")) {
 
-               } else {
+                    itemPhoto.setImageResource(R.drawable.person);
 
-                   if(bitmap != null) {
-                       bitmap.recycle();
-                   }
+                } else {
 
-                   BitmapFactory.Options options =new BitmapFactory.Options();
-                   //sinaburokim
-                   options.inSampleSize = 8;
-                   bitmap = BitmapFactory.decodeFile(BasicInfo.FOLDER_PHOTO + data,options);
-                   itemPhoto.setImageBitmap(bitmap);
-               }
+                    if (bitmap != null) {
+                        bitmap.recycle();
+                    }
 
-               break;
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    //sinaburokim
+                    options.inSampleSize = 8;
+                    bitmap = BitmapFactory.decodeFile(BasicInfo.FOLDER_PHOTO + data, options);
+                    itemPhoto.setImageBitmap(bitmap);
+                }
 
-           default:
-               throw new IllegalArgumentException();
-       }//swich
+                break;
+
+            default:
+                throw new IllegalArgumentException();
+        }//swich
+        Log.d(LOG_TAG, "setContents End");
 
     }//end
 
-    public void setMediaState(Object sVideo,Object sVoice) {
+    public void setMediaState(Object sVideo, Object sVoice) {
+        Log.d(LOG_TAG, "setMediaState Start");
 
         if (sVideo == null) {
 
@@ -109,5 +126,7 @@ public class MemoListItemView extends LinearLayout {
 
             itemVoice.setImageResource(R.drawable.icon_voice);
         }
+        Log.d(LOG_TAG, "setMediaState End");
+
     }
 }

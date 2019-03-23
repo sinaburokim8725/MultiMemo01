@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
@@ -14,7 +15,7 @@ import org.familly.multimemo.R;
 
 public class TitleBackgroundButton extends AppCompatButton {
 
-    private static final String TAG = "DEBUG";
+    public static final String LOG_TAG = "MultiMemo > "+ TitleBackgroundButton.class.getSimpleName();
 
     //base context
     Context context;
@@ -42,6 +43,7 @@ public class TitleBackgroundButton extends AppCompatButton {
 
     public TitleBackgroundButton(Context context) {
         super(context);
+        Log.d(LOG_TAG, "TitleBackgroundButton(Context context) 생성");
 
         this.context =context;
         init();
@@ -49,6 +51,8 @@ public class TitleBackgroundButton extends AppCompatButton {
 
     public TitleBackgroundButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+        Log.d(LOG_TAG, "TitleBackgroundButton(Context context, AttributeSet attrs) 생성");
+
         this.context = context;
         init();
     }
@@ -57,6 +61,8 @@ public class TitleBackgroundButton extends AppCompatButton {
      * 2.
      */
     public void init(){
+        Log.d(LOG_TAG, "init Start");
+
         setBackgroundResource(R.drawable.title_background);
 
         paint = new Paint();
@@ -74,6 +80,8 @@ public class TitleBackgroundButton extends AppCompatButton {
         //서체 설정
         paint.setTypeface(defaultTypeface);
 
+        Log.d(LOG_TAG, "init End");
+
     }
     /**
      * Handle touch event,move to main screen
@@ -81,6 +89,7 @@ public class TitleBackgroundButton extends AppCompatButton {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
+        Log.d(LOG_TAG, "onTouchEvent Start");
 
         //
         int action = event.getAction();
@@ -103,6 +112,8 @@ public class TitleBackgroundButton extends AppCompatButton {
         // onDraw (android.graphics.Canvas)가 호출됩니다.
         invalidate();
 
+        Log.d(LOG_TAG, "onTouchEvent End");
+
         return true;
     }
     //
@@ -110,6 +121,8 @@ public class TitleBackgroundButton extends AppCompatButton {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Log.d(LOG_TAG, "onDraw Start");
+
 
         int vWidth  = getWidth();
         int vHeight = getHeight();
@@ -131,49 +144,98 @@ public class TitleBackgroundButton extends AppCompatButton {
         //draw titile text
         canvas.drawText(titleText,tWidth,tHeight,paint);
 
+        Log.d(LOG_TAG, "onDraw End");
 
     }
 
     public int getDefaultColor() {
+        Log.d(LOG_TAG, "getDefaultColor Start");
+
+        Log.d(LOG_TAG, "getDefaultColor End");
+
         return defaultColor;
     }
 
     public void setDefaultColor(int defaultColor) {
+        Log.d(LOG_TAG, "setDefaultColor Start");
+
         this.defaultColor = defaultColor;
         paintChanged = true;
+
+        Log.d(LOG_TAG, "setDefaultColor End");
+
     }
 
     public float getDefaultSize() {
+        Log.d(LOG_TAG, "getDefaultSize Start");
+
+
+        Log.d(LOG_TAG, "getDefaultSize End");
+
         return defaultSize;
     }
 
     public void setDefaultSize(float defaultSize) {
+        Log.d(LOG_TAG, "setDefaultSize Start");
+
         this.defaultSize = defaultSize;
         paintChanged =true;
+
+        Log.d(LOG_TAG, "setDefaultSize End");
+
     }
 
     public float getDefaultScaleX() {
+        Log.d(LOG_TAG, "getDefaultScaleX Start");
+
+
+        Log.d(LOG_TAG, "getDefaultScaleX End");
+
         return defaultScaleX;
     }
 
     public void setDefaultScaleX(float defaultScaleX) {
+        Log.d(LOG_TAG, "setDefaultScaleX Start");
+
         this.defaultScaleX = defaultScaleX;
+
+        Log.d(LOG_TAG, "setDefaultScaleX End");
+
     }
 
     public Typeface getDefaultTypeface() {
+        Log.d(LOG_TAG, "getDefaultTypeface Start");
+
+
+        Log.d(LOG_TAG, "getDefaultTypeface End");
+
         return defaultTypeface;
     }
 
     public void setDefaultTypeface(Typeface defaultTypeface) {
+        Log.d(LOG_TAG, "setDefaultTypeface Start");
+
         this.defaultTypeface = defaultTypeface;
         paintChanged = true;
+
+        Log.d(LOG_TAG, "setDefaultTypeface End");
+
     }
 
     public String getTitleText() {
+        Log.d(LOG_TAG, "getTitleText Start");
+
+        Log.d(LOG_TAG, "getTitleText End");
+
         return titleText;
     }
 
     public void setTitleText(String titleText) {
+        Log.d(LOG_TAG, "setTitleText Start");
+
         this.titleText = titleText;
+
+        Log.d(LOG_TAG, "setTitleText End");
+
     }
 }

@@ -17,7 +17,8 @@ import android.widget.GridView;
 import org.familly.multimemo.common.TitleBitmapButton;
 
 public class PenPaletteDialogActivity extends AppCompatActivity {
-    private static final String TAG = "DEBUG";
+    private static final String LOG_TAG = "MultiMemo > "+PenPaletteDialogActivity.class.getSimpleName();
+
 
     GridView mGridView;
     TitleBitmapButton mCloseBtn;
@@ -29,6 +30,7 @@ public class PenPaletteDialogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pen_palette_dialog);
+        Log.d(LOG_TAG, "onCreate Start");
 
         this.setTitle(R.string.pen_selection_title);
         mGridView = (GridView) findViewById(R.id.grid_pen);
@@ -49,6 +51,8 @@ public class PenPaletteDialogActivity extends AppCompatActivity {
                 finish();
             }
         });
+        Log.d(LOG_TAG, "onCreate End");
+
     }
 }
 
@@ -56,7 +60,8 @@ public class PenPaletteDialogActivity extends AppCompatActivity {
  * 그리드뷰에 보여질 펜팔렛트의 데이터를 생성하고 붙이는 역할을한다.
  */
  class PenDataAdapter extends BaseAdapter {
-    private static final String TAG = "DEBUG";
+    private static final String LOG_TAG = "MultiMemo > "+PenDataAdapter.class.getSimpleName();
+
 
     Context mContext;
 
@@ -71,7 +76,8 @@ public class PenPaletteDialogActivity extends AppCompatActivity {
 
     public PenDataAdapter(Context context) {
         super();
-        Log.d(TAG, "PenDataAdapter 생성자를 통한 초기화");
+
+        Log.d(LOG_TAG, "PenDataAdapter 생성자를 통한 초기화");
 
         mContext = context;
         rowCount = 3;
@@ -80,33 +86,53 @@ public class PenPaletteDialogActivity extends AppCompatActivity {
 
     //사용자정의 메소드 start
     public int getNumColumns() {
+        Log.d(LOG_TAG, "getNumColumns Start");
+
+        Log.d(LOG_TAG, "getNumColumns End");
+
         return columnCount;
     }
+
     //사용자정의 메소드 end
     //오버라딩 메소드 start
     @Override
     public int getCount() {
+        Log.d(LOG_TAG, "getCount Start");
+
+        Log.d(LOG_TAG, "rowCount * columnCount >" + rowCount * columnCount);
+
+        Log.d(LOG_TAG, "getCount End");
+
         return rowCount * columnCount;
     }
 
     @Override
     public Object getItem(int position) {
+        Log.d(LOG_TAG, "getItem Start");
+
+        Log.d(LOG_TAG, "Object position > " + position);
+
+        Log.d(LOG_TAG, "getItem End");
+
         return pens[position];
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        Log.d(LOG_TAG, "getItemId Start");
+
+        Log.d(LOG_TAG, "getItemId End");
+        return position;
     }
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-        Log.d(TAG, "PenDataAdapter getView(" + position + ") called");
+        Log.d(LOG_TAG, "getView(" + position + ")  Start");
 
         //
         int rowIndex = position / columnCount;
         int columnIdex = position % columnCount;
-        Log.d(TAG, "PenDataAdapter Index( " + rowIndex + " , " + columnCount + " )");
+        Log.d(LOG_TAG, "PenDataAdapter Index( " + rowIndex + " , " + columnCount + " )");
 
         GridView.LayoutParams params = new GridView.LayoutParams(
                 GridView.LayoutParams.MATCH_PARENT,
@@ -148,6 +174,8 @@ public class PenPaletteDialogActivity extends AppCompatActivity {
                 ((PenPaletteDialogActivity)mContext).finish();
             }
         });
+        Log.d(LOG_TAG, "getView() End");
+
         return aItem;
     }
     //오버라이딩 메소드 end

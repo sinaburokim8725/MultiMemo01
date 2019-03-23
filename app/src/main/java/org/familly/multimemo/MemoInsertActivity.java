@@ -35,7 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MemoInsertActivity extends AppCompatActivity {
-    private static final String TAG = "DEBUG";
+    private static final String LOG_TAG = "MultiMemo > "+MemoInsertActivity.class.getSimpleName();
 
     //버튼참조
     TitleBitmapButton mVideoBtn;
@@ -109,12 +109,15 @@ public class MemoInsertActivity extends AppCompatActivity {
     ImageView insertHandWritingView;
     String mMomoDate;
 
+    Animation leftAnim;
+    Animation rightAnim;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo_insert);
 
-        Log.d(TAG, "MemoInsertActivity onCreate() 호출");
+        Log.d(LOG_TAG, "onCreate Start");
 
         //각종 참조 뷰들 start
         //촬영 이미지 앨번에서 선택한 이미지 위치
@@ -211,7 +214,7 @@ public class MemoInsertActivity extends AppCompatActivity {
         mPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "MemoInsertActivity iInsertPhoto onClick() 호출됨");
+                Log.d(LOG_TAG, "MemoInsertActivity iInsertPhoto onClick() 호출됨");
                 //신규 수정 에 따라서 알림메뉴가 달라진다.
                 if (isPhotoCaptured || isPhotoFileSaved) {
                     //갭쳐여부나 저장여부가 true 이면
@@ -292,31 +295,19 @@ public class MemoInsertActivity extends AppCompatActivity {
         //이벤트 추가 start
 
         //이벤트 추가 end
+        Log.d(LOG_TAG, "onCreate End");
     }
-    Animation leftAnim;
 
-    Animation rightAnim;
+    /*Animation leftAnim;
+
+    Animation rightAnim;*/
 
 
-    private class SlidingPageAnimationListener implements Animation.AnimationListener {
-        @Override
-        public void onAnimationStart(Animation animation) {
 
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-
-        }
-    }
 
     public void processIntent(Intent intent) {
-        Log.d(TAG, "MemoInsertActivity processIntent() 호출");
+        Log.d(LOG_TAG, "processIntent Start");
+
         //메모 id
         mMemoId = intent.getStringExtra(BasicInfo.KEY_MEMO_ID);
         //텍스트
@@ -358,11 +349,15 @@ public class MemoInsertActivity extends AppCompatActivity {
             insertHandWritingBtn.setSelected(true);
 
         }
+        Log.d(LOG_TAG, "processIntent End");
     }
 
     private void setMemoDate(String dateStr) {
-        Log.d(TAG, "MemoInsertActivity setMemoDate() 호출 " + dateStr);
+        Log.d(LOG_TAG, "setMemoDate Start");
+
+        Log.d(LOG_TAG, "dateStr > " + dateStr);
         Date date = new Date();
+
         try {
             if (BasicInfo.LANGUAGE.equals("ko")) {
                 date = BasicInfo.dateNameformat2.parse(dateStr);
@@ -371,7 +366,7 @@ public class MemoInsertActivity extends AppCompatActivity {
             }
 
         } catch (Exception e) {
-            Log.d(TAG, "날짜 파싱도중 예외발생", e);
+            Log.d(LOG_TAG, "날짜 파싱도중 예외발생", e);
         }
 
         mCalendar.setTime(date);
@@ -418,22 +413,38 @@ public class MemoInsertActivity extends AppCompatActivity {
             insertTimeButton.setText(hourStr + ":" + minuteStr);
 
         }
+        Log.d(LOG_TAG, "setMemoDate End");
+
     }
 
     //동영상 녹화화면
     public void showVideoRecordingActivity() {
+        Log.d(LOG_TAG, "showVideoRecordingActivity Start");
+
         Intent intent = new Intent(getApplicationContext(), VideoRecordingActivity.class);
         startActivityForResult(intent, BasicInfo.REQ_VIDEO_RECORDING_ACTIVITY);
+
+        Log.d(LOG_TAG, "showVideoRecordingActivity End");
+
     }
 
     //기존에 녹화된 동영상 파일로딩
     public void showVideoLoadingActivity() {
+        Log.d(LOG_TAG, "showVideoLoadingActivity Start");
+
         Intent intent = new Intent(getApplicationContext(), VideoSelectionActivity.class);
         startActivityForResult(intent, BasicInfo.REQ_VIDEO_LOADING_ACTIVITY);
+
+        Log.d(LOG_TAG, "showVideoLoadingActivity End");
+
     }
+
 
     //동영상 재생화면
     public void showVideoPlayingActivity() {
+        Log.d(LOG_TAG, "showVideoPlayingActivity Start");
+
+
         Intent intent = new Intent(getApplicationContext(), VideoPlayActivity.class);
         if (BasicInfo.isAbsoluteVideoPath(tempVideoUri)) {
             intent.putExtra(BasicInfo.KEY_URI_VIDEO, BasicInfo.FOLDER_VIDEO + tempVideoUri);
@@ -441,25 +452,39 @@ public class MemoInsertActivity extends AppCompatActivity {
             intent.putExtra(BasicInfo.KEY_URI_VIDEO, tempVideoUri);
         }
         startActivity(intent);
+
+        Log.d(LOG_TAG, "showVideoPlayingActivity End");
+
     }
 
     //음성녹화화면
     public void showVoiceRecordingActivity() {
+        Log.d(LOG_TAG, "showVoiceRecordingActivity Start");
+
         Intent intent = new Intent(getApplicationContext(), VoiceRecordingActivity.class);
         startActivityForResult(intent, BasicInfo.REQ_VOICE_RECORDING_ACTIVITY);
+
+        Log.d(LOG_TAG, "showVoiceRecordingActivity End");
+
     }
 
     //음성재생화면
     public void showVoicePlayingActivity() {
+        Log.d(LOG_TAG, "showVoicePlayingActivity Start");
+
         Intent intent = new Intent(getApplicationContext(), VoicePlayActivity.class);
         intent.putExtra(BasicInfo.KEY_URI_VOICE, BasicInfo.FOLDER_VOICE + tempVoiceUri);
         startActivity(intent);
+
+        Log.d(LOG_TAG, "showVoicePlayingActivity End");
 
     }
 
     //조회화면에서 리스트를 누르고 수정화면으로 왔을경우 기존 데이터를 표시해줘야 한다.
     private void setMediaImage(String photoId, String photoUri, String videoId, String voiceId, String handwritingId) {
-        Log.d(TAG, "MemoInsertActivity setMediaImage() 호출됨 \n" + "photoId : " + photoId + " , " + "photoUrk :" + photoUri
+        Log.d(LOG_TAG, "setMediaImage Start");
+
+        Log.d(LOG_TAG, "\n" + "photoId : " + photoId + " , " + "photoUrk :" + photoUri
                 + " , videoId : " + videoId + " , voiceId : " + voiceId + " , handwritingId : " + handwritingId);
 
         //표시할 사진 유무에 따른 사진 세팅
@@ -514,11 +539,14 @@ public class MemoInsertActivity extends AppCompatActivity {
                     (R.drawable.icon_voice), null, null);
 
         }
+        Log.d(LOG_TAG, "setMediaImage End");
 
     }
 
     //하단 메뉴 버튼 설정
     public void setBottomButton() {
+        Log.d(LOG_TAG, "setBottomButton Start");
+
         insertSaveBtn = (TitleBitmapButton) findViewById(R.id.button_saveMemo);
         insertCancelBtn = (TitleBitmapButton) findViewById(R.id.button_cancelMemo);
         //deleteBtn = (TitleBitmapButton) findViewById(R.id.button_delete);
@@ -544,12 +572,16 @@ public class MemoInsertActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        Log.d(LOG_TAG, "setBottomButton End");
+
     }
     /*
     *테이터 베이스 레코드 추가
     * */
     private void saveInput() {
-        Log.d(TAG, "MemoInsertActivity 내 saveInput() 호출");
+        Log.d(LOG_TAG, "saveInput Start");
+
         String sql = null;
 
         //photo 테이블에 입력후 입력한 사진명을 얻는다.
@@ -558,7 +590,7 @@ public class MemoInsertActivity extends AppCompatActivity {
 
         if (photoFileName != null) {
             sql = "SELECT _id FROM " + MemoDatabase.TABLE_PHOTO + " WHERE URI = '" + photoFileName + "'";
-            Log.d(TAG, "saveInput()  포토id획득 \n sql : " + sql);
+            Log.d(LOG_TAG, "saveInput()  포토id획득 \n sql : " + sql);
 
             if (MultiMemoMainActivity.mDatabase != null) {
                 Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
@@ -576,7 +608,7 @@ public class MemoInsertActivity extends AppCompatActivity {
 
         if (handwritingFileName != null) {
             sql = "SELECT _ID FROM " + MemoDatabase.TABLE_HANDWRITING + " WHERE URI = '" + handwritingFileName + "'";
-            Log.d(TAG, "saveInput() 손글씨id 획득 \n sql : " + sql);
+            Log.d(LOG_TAG, "saveInput() 손글씨id 획득 \n sql : " + sql);
             if (MultiMemoMainActivity.mDatabase != null) {
                 Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
                 if (cursor.moveToNext()) {
@@ -592,7 +624,7 @@ public class MemoInsertActivity extends AppCompatActivity {
 
         if (videoFileName != null) {
             sql = "SELECT _ID FROM " + MemoDatabase.TABLE_VIDEO + " WHERE URI = '" + videoFileName + "'";
-            Log.d(TAG, "saveInput() 비데오 id 확득 \n sql : ");
+            Log.d(LOG_TAG, "saveInput() 비데오 id 확득 \n sql : ");
             if (MultiMemoMainActivity.mDatabase != null) {
                 Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
                 if (cursor.moveToNext()) {
@@ -607,7 +639,7 @@ public class MemoInsertActivity extends AppCompatActivity {
         int voiceId = -1;
         if (isVoiceRecorded && voiceFileName != null) {
             sql = "SELECT _ID FROM " + MemoDatabase.TABLE_VOICE + " WHERE URI = '" + voiceFileName + "'";
-            Log.d(TAG,"saveInput() 보이스 id 획득 \n sql : " + sql);
+            Log.d(LOG_TAG,"saveInput() 보이스 id 획득 \n sql : " + sql);
             if (MultiMemoMainActivity.mDatabase != null) {
                 Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
                 if (cursor.moveToNext()) {
@@ -627,12 +659,15 @@ public class MemoInsertActivity extends AppCompatActivity {
                 "'" + videoId + "'," +
                 "'" + voiceId + "'," +
                 "'" + handwritingId + "')";
-        Log.d(TAG, "Insert sql : " + sql);
+        Log.d(LOG_TAG, "Insert sql : " + sql);
         if (MultiMemoMainActivity.mDatabase != null) {
             MultiMemoMainActivity.mDatabase.execSQL(sql);
         }
         Intent intent = getIntent();
         setResult(RESULT_OK, intent);
+
+        Log.d(LOG_TAG, "saveInput End");
+
         finish();
     }
 
@@ -641,7 +676,8 @@ public class MemoInsertActivity extends AppCompatActivity {
      *
      * */
     private void modifyInput() {
-        Log.d(TAG, "MemoINsertActivity modifyInput() 호출");
+        Log.d(LOG_TAG, "modifyInput Start");
+
 
         Intent intent = getIntent();
         String sql = null;
@@ -653,7 +689,7 @@ public class MemoInsertActivity extends AppCompatActivity {
         if (photoFileName != null) {
             //파일명에 해당하는 photo id 를 photo 테이블에서 가져온다.
             sql = "SELECT _id FROM " + MemoDatabase.TABLE_PHOTO + " WHERE URI = '" + photoFileName + "'";
-            Log.d(TAG, "조회쿼리 : " + sql);
+            Log.d(LOG_TAG, "조회쿼리 : " + sql);
 
             if (MultiMemoMainActivity.mDatabase != null) {
                 Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
@@ -707,7 +743,7 @@ public class MemoInsertActivity extends AppCompatActivity {
         if (handwritingFileName != null) {
 
             sql = "SELECT _id FROM " + MemoDatabase.TABLE_HANDWRITING + " WHERE URI = '" + handwritingFileName + "'";
-            Log.d(TAG, "조회쿼리 : " + sql);
+            Log.d(LOG_TAG, "조회쿼리 : " + sql);
 
             if (MultiMemoMainActivity.mDatabase != null) {
                 Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
@@ -763,7 +799,7 @@ public class MemoInsertActivity extends AppCompatActivity {
         if (videFileName != null) {
 
             sql = "SELECT _id FROM " + MemoDatabase.TABLE_VIDEO + " WHERE URI = '" + videFileName + "'";
-            Log.d(TAG, "조회쿼리 : " + sql);
+            Log.d(LOG_TAG, "조회쿼리 : " + sql);
 
             if (MultiMemoMainActivity.mDatabase != null) {
                 Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
@@ -818,7 +854,7 @@ public class MemoInsertActivity extends AppCompatActivity {
         if (voiceFileName != null) {
 
             sql = "SELECT _id FROM " + MemoDatabase.TABLE_VOICE + " WHERE URI = '" + voiceFileName + "'";
-            Log.d(TAG, "조회쿼리 : " + sql);
+            Log.d(LOG_TAG, "조회쿼리 : " + sql);
 
             if (MultiMemoMainActivity.mDatabase != null) {
                 Cursor cursor = MultiMemoMainActivity.mDatabase.rawQuery(sql);
@@ -873,7 +909,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                 " CONTENT_TEXT = '" + mMemoStr + "'" +
                 " WHERE _ID = '" + mMemoId + "'";
 
-        Log.d(TAG, "sql : " + sql);
+        Log.d(LOG_TAG, "sql : " + sql);
 
         if (MultiMemoMainActivity.mDatabase != null) {
             MultiMemoMainActivity.mDatabase.execSQL(sql);
@@ -891,6 +927,9 @@ public class MemoInsertActivity extends AppCompatActivity {
         intent.putExtra(BasicInfo.KEY_URI_HANDWRITING, mMediaHandwritingUri);;
 
         setResult(RESULT_OK, intent);
+
+        Log.d(LOG_TAG, "modifyInput End");
+
         finish();
     }
 
@@ -902,7 +941,8 @@ public class MemoInsertActivity extends AppCompatActivity {
      * @return
      */
     private String insertPhoto() {
-        Log.d(TAG, "MemoInsertActivity insertPhoto() 호출");
+        Log.d(LOG_TAG, "insertPhoto Start");
+
 
         String photoName = null;
 
@@ -910,12 +950,12 @@ public class MemoInsertActivity extends AppCompatActivity {
             try {
                 //수정일경우
                 if (mMemoMode != null && mMemoMode.equals(BasicInfo.MODE_MODIFY)) {
-                    Log.d(TAG, "이전 사진정보 삭제");
+                    Log.d(LOG_TAG, "이전 사진정보 삭제");
 
                     String sql = "DELETE FROM " + MemoDatabase.TABLE_PHOTO +
                             " WHERE _ID = " + Integer.parseInt(mMediaPhotoId);
 
-                    Log.d(TAG, "sql : " + sql);
+                    Log.d(LOG_TAG, "sql : " + sql);
 
                     if (MultiMemoMainActivity.mDatabase != null) {
                         MultiMemoMainActivity.mDatabase.execSQL(sql);
@@ -932,7 +972,7 @@ public class MemoInsertActivity extends AppCompatActivity {
 
                 //폴더가 없다면 폴더를 생성한다.
                 if (!photoFolder.isDirectory()) {
-                    Log.d(TAG, "폴더생성 : " + photoFolder);
+                    Log.d(LOG_TAG, "폴더생성 : " + photoFolder);
                     photoFolder.mkdirs();
                 }
 
@@ -943,7 +983,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                 outputStream.close();
 
                 if (photoName != null) {
-                    Log.d(TAG, "isPhotoCaptured   : " + isPhotoCaptured);
+                    Log.d(LOG_TAG, "isPhotoCaptured   : " + isPhotoCaptured);
                     //insert picture info
                     String sql = "INSERT INTO " + MemoDatabase.TABLE_PHOTO + " (uri) VALUES (" +
                             "'" + photoName + "'"+")";
@@ -953,14 +993,17 @@ public class MemoInsertActivity extends AppCompatActivity {
                 }
 
             } catch (IOException ex) {
-                Log.e(TAG, "예외발생 : copying photo", ex);
+                Log.e(LOG_TAG, "예외발생 : copying photo", ex);
             }
         }
+
+        Log.d(LOG_TAG, "insertPhoto End");
+
         return photoName;
     }
     //손글씨
     private String insertHandwriting() {
-        Log.d(TAG, "MemoInsertActivity insertHandwriting() 호출");
+        Log.d(LOG_TAG, "insertHandwriting Start");
 
         String handwritingName = null;
 
@@ -968,12 +1011,12 @@ public class MemoInsertActivity extends AppCompatActivity {
             try {
                 //수정일경우
                 if (mMemoMode != null && mMemoMode.equals(BasicInfo.MODE_MODIFY)) {
-                    Log.d(TAG, "이전 손글씨정보 삭제");
+                    Log.d(LOG_TAG, "이전 손글씨정보 삭제");
 
                     String sql = "DELETE FROM " + MemoDatabase.TABLE_HANDWRITING +
                             " WHERE _ID = '" + mMediaHandwritingId + "'";
 
-                    Log.d(TAG, "sql : " + sql);
+                    Log.d(LOG_TAG, "sql : " + sql);
 
                     if (MultiMemoMainActivity.mDatabase != null) {
                         MultiMemoMainActivity.mDatabase.execSQL(sql);
@@ -990,7 +1033,7 @@ public class MemoInsertActivity extends AppCompatActivity {
 
                 //폴더가 없다면 폴더를 생성한다.
                 if (!handwritingFolder.isDirectory()) {
-                    Log.d(TAG, "폴더생성 : " + handwritingFolder);
+                    Log.d(LOG_TAG, "폴더생성 : " + handwritingFolder);
                     handwritingFolder.mkdirs();
                 }
 
@@ -1002,7 +1045,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                 outputStream.close();
 
                 if (handwritingName != null) {
-                    Log.d(TAG, "isHandwritingMade   : " + isHandwritingMade);
+                    Log.d(LOG_TAG, "isHandwritingMade   : " + isHandwritingMade);
 
                     //insert picture info
                     String sql = "INSERT INTO " + MemoDatabase.TABLE_HANDWRITING + " (uri) VALUES (" +
@@ -1014,26 +1057,29 @@ public class MemoInsertActivity extends AppCompatActivity {
                 }
 
             } catch (IOException ex) {
-                Log.e(TAG, "예외발생 : copying handwriting", ex);
+                Log.e(LOG_TAG, "예외발생 : copying handwriting", ex);
             }
         }
+
+        Log.d(LOG_TAG, "insertHandwriting End");
+
         return handwritingName;
     }
     //동영상
     private String insertVideo() {
-        Log.d(TAG, "MemoInsertActivity insertVideo() 호출");
+        Log.d(LOG_TAG, "insertVideo Start");
 
         String videoName = null;
 
         if (isVideoRecorded) {
             //수정일경우
             if (mMemoMode != null && ( mMemoMode.equals(BasicInfo.MODE_MODIFY) || mMemoMode.equals(BasicInfo.MODE_VIEW ))) {
-                Log.d(TAG, "이전 동영상정보 삭제");
+                Log.d(LOG_TAG, "이전 동영상정보 삭제");
 
                 String sql = "DELETE FROM " + MemoDatabase.TABLE_VIDEO +
                         " WHERE _ID = '" + mMediaVideoId + "'";
 
-                Log.d(TAG, "sql : " + sql);
+                Log.d(LOG_TAG, "sql : " + sql);
 
                 if (MultiMemoMainActivity.mDatabase != null) {
                     MultiMemoMainActivity.mDatabase.execSQL(sql);
@@ -1055,7 +1101,7 @@ public class MemoInsertActivity extends AppCompatActivity {
 
                 //폴더가 없다면 폴더를 생성한다.
                 if (!videoFolder.isDirectory()) {
-                    Log.d(TAG, "폴더생성 : " + videoFolder);
+                    Log.d(LOG_TAG, "폴더생성 : " + videoFolder);
                     videoFolder.mkdirs();
                 }
 
@@ -1069,7 +1115,7 @@ public class MemoInsertActivity extends AppCompatActivity {
             }
 
             if (videoName != null) {
-                Log.d(TAG, "isVideoRecorded   : " + isVideoRecorded);
+                Log.d(LOG_TAG, "isVideoRecorded   : " + isVideoRecorded);
 
                 //insert picture info
                 String sql = "INSERT INTO " + MemoDatabase.TABLE_VIDEO + " (uri) VALUES (" +
@@ -1081,11 +1127,14 @@ public class MemoInsertActivity extends AppCompatActivity {
             }
 
         }
+
+        Log.d(LOG_TAG, "insertVideo End");
+
         return videoName;
     }
     //보이스
     private String insertVoice() {
-        Log.d(TAG, "MemoInsertActivity insertVoice() 호출");
+        Log.d(LOG_TAG, "insertVoice Start");
 
         String voiceName = null;
 
@@ -1093,12 +1142,12 @@ public class MemoInsertActivity extends AppCompatActivity {
 
             //수정일경우
             if (mMemoMode != null && ( mMemoMode.equals(BasicInfo.MODE_MODIFY) || mMemoMode.equals(BasicInfo.MODE_VIEW ))) {
-                Log.d(TAG, "이전 동영상정보 삭제");
+                Log.d(LOG_TAG, "이전 동영상정보 삭제");
 
                 String sql = "DELETE FROM " + MemoDatabase.TABLE_VOICE +
                         " WHERE _ID = '" + mMediaVoiceId + "'";
 
-                Log.d(TAG, "sql : " + sql);
+                Log.d(LOG_TAG, "sql : " + sql);
 
                 if (MultiMemoMainActivity.mDatabase != null) {
                     MultiMemoMainActivity.mDatabase.execSQL(sql);
@@ -1117,7 +1166,7 @@ public class MemoInsertActivity extends AppCompatActivity {
 
             //폴더가 없다면 폴더를 생성한다.
             if (!voiceFolder.isDirectory()) {
-                Log.d(TAG, "폴더생성 : " + voiceFolder);
+                Log.d(LOG_TAG, "폴더생성 : " + voiceFolder);
                 voiceFolder.mkdirs();
             }
 
@@ -1126,10 +1175,8 @@ public class MemoInsertActivity extends AppCompatActivity {
             File tempFile = new File(BasicInfo.FOLDER_VOICE + "recorded");
             tempFile.renameTo(new File(BasicInfo.FOLDER_VOICE + voiceName));
 
-
-
             if (voiceName != null) {
-                Log.d(TAG, "isVoiceRecorded   : " + isVoiceRecorded);
+                Log.d(LOG_TAG, "isVoiceRecorded   : " + isVoiceRecorded);
 
                 //insert voice info
                 String sql = "INSERT INTO " + MemoDatabase.TABLE_VOICE + " (uri) VALUES (" +
@@ -1140,6 +1187,9 @@ public class MemoInsertActivity extends AppCompatActivity {
                 }
             }
         }
+
+        Log.d(LOG_TAG, "insertVoice End");
+
         return voiceName;
     }
 
@@ -1147,12 +1197,16 @@ public class MemoInsertActivity extends AppCompatActivity {
 
     //파일명 생성
     private String createFileName() {
-        Log.d(TAG, "MemoInsertActivity createFileName() 호출");
+        Log.d(LOG_TAG, "createFileName Start");
+
 
         Date currentDate = new Date();
         String fileName = String.valueOf(currentDate.getTime());
 
-        Log.d(TAG, "파일이름 밀리세컨드 시간 : " + fileName);
+        Log.d(LOG_TAG, "파일이름 밀리세컨드 시간 : " + fileName);
+
+        Log.d(LOG_TAG, "createFileName End");
+
         return fileName;
     }
 
@@ -1160,6 +1214,8 @@ public class MemoInsertActivity extends AppCompatActivity {
      *
      */
     public void setMediaLayout() {
+        Log.d(LOG_TAG, "setMediaLayout Start");
+
         isPhotoCaptured = false;
         isVideoRecorded = false;
         isVoiceRecorded = false;
@@ -1167,12 +1223,17 @@ public class MemoInsertActivity extends AppCompatActivity {
 
         mVideoBtn = (TitleBitmapButton) findViewById(R.id.button_insertVideo);
         mVoiceBtn = (TitleBitmapButton) findViewById(R.id.button_insertVoice);
+
+        Log.d(LOG_TAG, "setMediaLayout End");
+
     }
 
     //
     private void setCalendar() {
-        Log.d(TAG, "MemoInsertActivity setCalendar() 호출");
+        Log.d(LOG_TAG, "setCalendar Start");
+
         insertDateButton = (TitleBitmapButton) findViewById(R.id.button_insertDate);
+
         insertDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1188,7 +1249,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                     }
 
                 } catch (ParseException e) {
-                    Log.e(TAG, "Exception in parsing date : " + date,e);
+                    Log.e(LOG_TAG, "Exception in parsing date : " + date,e);
                 }
                 calendar.setTime(date);
 
@@ -1214,8 +1275,9 @@ public class MemoInsertActivity extends AppCompatActivity {
                         date = BasicInfo.dateTimeFormat.parse(timeStr);
                     }
                 } catch (Exception e) {
-                    Log.e(TAG, "Exception in parsing date : " + date);
+                    Log.e(LOG_TAG, "Exception in parsing date : " + date);
                 }
+
                 calendar.setTime(date);
                 new TimePickerDialog(
                         MemoInsertActivity.this,
@@ -1273,13 +1335,16 @@ public class MemoInsertActivity extends AppCompatActivity {
             insertTimeButton.setText(hourStr + ":" + minuteStr);
 
         }
+        Log.d(LOG_TAG, "setCalendar End");
+
     }
 
     //날짜설정 리스너
     DatePickerDialog.OnDateSetListener dataSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            Log.d(TAG, "MemoInsertActivity DatePickerDialog.OnDateSetListener onDateSet() 호출");
+            Log.d(LOG_TAG, "DatePickerDialog.OnDateSetListener onDateSet() Start");
+
             mCalendar.set(year, month, dayOfMonth);
 
             String monthStr = String.valueOf(month + 1);
@@ -1299,13 +1364,17 @@ public class MemoInsertActivity extends AppCompatActivity {
                 insertDateButton.setText(year + "-" + monthStr + "-" + dayStr);
 
             }
+            Log.d(LOG_TAG, "DatePickerDialog.OnDateSetListener onDateSet() End");
+
         }
+
     };
 
     //시간설정 리스너
     TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            Log.d(LOG_TAG, "onTimeSet Start");
 
             mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
             mCalendar.set(Calendar.MINUTE,minute);
@@ -1326,18 +1395,21 @@ public class MemoInsertActivity extends AppCompatActivity {
             } else {
                 insertTimeButton.setText(hourStr + "-" + minuteStr);
             }
+            Log.d(LOG_TAG, "onTimeSet End");
+
         }
     };
 
     //일자와 메모확인
     private boolean parseValues() {
-        Log.d(TAG, "MemoInsertActivity parseValues() 호출");
+        Log.d(LOG_TAG, "parseValues Start");
+
 
         String insertDateStr = insertDateButton.getText().toString();
         String insertTimeStr = insertTimeButton.getText().toString();
 
         String srcDateStr = insertDateStr + " " + insertTimeStr;
-        Log.d(TAG, "srcDateStr : " + srcDateStr);
+        Log.d(LOG_TAG, "srcDateStr : " + srcDateStr);
 
         try {
             if (BasicInfo.LANGUAGE.equals("ko")) {
@@ -1349,7 +1421,7 @@ public class MemoInsertActivity extends AppCompatActivity {
             }
 
         } catch (ParseException ex) {
-            Log.e(TAG, "Exception in parsing date : " + insertDateStr);
+            Log.e(LOG_TAG, "Exception in parsing date : " + insertDateStr);
         }
 
         mMemoStr = mMemoEidt.getText().toString();
@@ -1364,18 +1436,20 @@ public class MemoInsertActivity extends AppCompatActivity {
                 return false;
             }
         }
+        Log.d(LOG_TAG, "parseValues End");
+
         return true;
     }
 
     //showDialog 호출시 불려지는 콜백함수
     @Override
     protected Dialog onCreateDialog(int id) {
-        Log.d(TAG, "MemoInsertActivity onCreateDialog() 오버라이드된 콜백함수 호출됨");
+        Log.d(LOG_TAG, "onCreateDialog() Start");
         AlertDialog.Builder builder = null;
 
         switch (id) {
             case BasicInfo.CONFIRM_TEXT_INPUT:
-                Log.d(TAG, "메모텍스트 입력이 없을경우 : " + BasicInfo.CONFIRM_TEXT_INPUT);
+                Log.d(LOG_TAG, "메모텍스트 입력이 없을경우 : " + BasicInfo.CONFIRM_TEXT_INPUT);
                 builder = new AlertDialog.Builder(this);
                 builder.setTitle(R.string.memo_title);
                 builder.setMessage("텍스트를 입력하세요.");
@@ -1413,12 +1487,12 @@ public class MemoInsertActivity extends AppCompatActivity {
                 builder.setNegativeButton(R.string.cancel_btn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "취소 버튼 누름 : " + "(" + which + " , " + dialog.toString() + ")");
+                        Log.d(LOG_TAG, "취소 버튼 누름 : " + "(" + which + " , " + dialog.toString() + ")");
                     }
                 });
                 break;
             case BasicInfo.CONTENT_PHOTO_EX:
-                Log.d(TAG, "선택된 사진이 있을경우 선택된 사진 취소 메뉴추가 :" + BasicInfo.CONTENT_PHOTO_EX);
+                Log.d(LOG_TAG, "선택된 사진이 있을경우 선택된 사진 취소 메뉴추가 :" + BasicInfo.CONTENT_PHOTO_EX);
                 builder = new AlertDialog.Builder(this);
 
                 mSelectdContentArray = R.array.array_photo_ex;
@@ -1453,7 +1527,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                 builder.setNegativeButton(R.string.cancel_btn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "취소버튼 눌렀음.");
+                        Log.d(LOG_TAG, "취소버튼 눌렀음.");
                     }
                 });
                 break;
@@ -1483,13 +1557,13 @@ public class MemoInsertActivity extends AppCompatActivity {
                 builder.setSingleChoiceItems(mSelectdContentArray, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "video 알림창 선택된 idex : " + which);
+                        Log.d(LOG_TAG, "video 알림창 선택된 idex : " + which);
                     }
                 });
                 builder.setPositiveButton(R.string.selection_btn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "확인버튼 선택 선택된 index : " + which);
+                        Log.d(LOG_TAG, "확인버튼 선택 선택된 index : " + which);
                     }
                 });
                 builder.setNegativeButton(R.string.cancel_btn, new DialogInterface.OnClickListener() {
@@ -1507,14 +1581,14 @@ public class MemoInsertActivity extends AppCompatActivity {
                 builder.setSingleChoiceItems(mSelectdContentArray, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "학장 video 메뉴중 선택된 Index : " + which);
+                        Log.d(LOG_TAG, "학장 video 메뉴중 선택된 Index : " + which);
                         mChoicedArrayItem = which;
                     }
                 });
                 builder.setPositiveButton(R.string.selection_btn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "확인 버튼 클릭됨 선택된 Index : " + which);
+                        Log.d(LOG_TAG, "확인 버튼 클릭됨 선택된 Index : " + which);
                         if (mChoicedArrayItem == 0) {
                             showVideoPlayingActivity();
                         } else if (mChoicedArrayItem == 1) {
@@ -1545,14 +1619,14 @@ public class MemoInsertActivity extends AppCompatActivity {
                 builder.setSingleChoiceItems(mSelectdContentArray, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        Log.d(TAG, "음성메뉴중 선택한 메뉴 index : " + whichButton);
+                        Log.d(LOG_TAG, "음성메뉴중 선택한 메뉴 index : " + whichButton);
                         mChoicedArrayItem = whichButton;
                     }
                 });
                 builder.setPositiveButton(R.string.selection_btn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "음성확인버튼 눌렀음 선ㄷ택된 메뉴 Index : " + which);
+                        Log.d(LOG_TAG, "음성확인버튼 눌렀음 선ㄷ택된 메뉴 Index : " + which);
                         if (mChoicedArrayItem == 0) {
                             showVoiceRecordingActivity();
                         }
@@ -1573,7 +1647,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                 builder.setSingleChoiceItems(mSelectdContentArray, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "선택된 메뉴 index : " + which);
+                        Log.d(LOG_TAG, "선택된 메뉴 index : " + which);
                         mChoicedArrayItem = which;
                     }
                 });
@@ -1581,7 +1655,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                 builder.setPositiveButton(R.string.selection_btn, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "음성확장메뉴 확인버튼 클릭 선택된 메뉴 index : " + which);
+                        Log.d(LOG_TAG, "음성확장메뉴 확인버튼 클릭 선택된 메뉴 index : " + which);
                         if (mChoicedArrayItem == 0) {
                             showVoicePlayingActivity();
                         } else if (mChoicedArrayItem == 1) {
@@ -1606,17 +1680,19 @@ public class MemoInsertActivity extends AppCompatActivity {
             default:
                 break;
         }
+        Log.d(LOG_TAG, "onCreateDialog() End");
 
         return builder.create();
     }
 
     //메모삭제
     private void deleteMemo() {
+        Log.d(LOG_TAG, "deleteMemo() Start");
         //delete photo record and file start
-        Log.d(TAG, "deleting previous photo record and file : " + mMediaPhotoId);
+        Log.d(LOG_TAG, "deleting previous photo record and file : " + mMediaPhotoId);
         String sql = "DELETE FROM " + MemoDatabase.TABLE_PHOTO +
                 " WHERE _ID = '" + mMediaPhotoId + "'";
-        Log.d(TAG, "이전 포토이미지 삭제 sql : " + sql);
+        Log.d(LOG_TAG, "이전 포토이미지 삭제 sql : " + sql);
 
         if (MultiMemoMainActivity.mDatabase != null) {
             MultiMemoMainActivity.mDatabase.execSQL(sql);
@@ -1628,10 +1704,10 @@ public class MemoInsertActivity extends AppCompatActivity {
         }
         //end
         //delete handwriting record and file start
-        Log.d(TAG, "deleting previous handwriting record and file : " + mMediaHandwritingId);
+        Log.d(LOG_TAG, "deleting previous handwriting record and file : " + mMediaHandwritingId);
         sql = "DELETE FROM " + MemoDatabase.TABLE_HANDWRITING +
                 " WHERE _ID = '" + mMediaHandwritingId + "'";
-        Log.d(TAG, "이전 손글씨이미지 삭제 sql : " + sql);
+        Log.d(LOG_TAG, "이전 손글씨이미지 삭제 sql : " + sql);
 
         if (MultiMemoMainActivity.mDatabase != null) {
             MultiMemoMainActivity.mDatabase.execSQL(sql);
@@ -1645,25 +1721,40 @@ public class MemoInsertActivity extends AppCompatActivity {
         //동영상 보이스 테이블 정보는?
 
         //메모테이블 정보 삭제
-        Log.d(TAG, "DELETING PREVIOUS MEMO RECORD :  " + mMemoId);
+        Log.d(LOG_TAG, "DELETING PREVIOUS MEMO RECORD :  " + mMemoId);
         sql = "DELETE FROM " + MemoDatabase.TABLE_MEMO + " WHERE _ID = '" + mMemoId + "'";
-        Log.d(TAG, "메모정보 삭제 : " + sql);
+        Log.d(LOG_TAG, "메모정보 삭제 : " + sql);
         if (MultiMemoMainActivity.mDatabase != null) {
             MultiMemoMainActivity.mDatabase.execSQL(sql);
         }
         setResult(RESULT_OK);
+
+        Log.d(LOG_TAG, "deleteMemo() End");
+
         finish();
     }
 
     //사진미리보기및 촬영화면 (개선점:미리보기가 및 선택부분 새로운 기법고려필요)
     private void showPhotoCaptureActivity() {
+
+        Log.d(LOG_TAG, "showPhotoCaptureActivity Start");
+
         Intent intent = new Intent(getApplicationContext(), PhotoCaptureActivity.class);
         startActivityForResult(intent, BasicInfo.REQ_PHOTO_CAPTURE_ACTIVITY);
+
+        Log.d(LOG_TAG, "showPhotoCaptureActivity End");
+
     }
+
     //사진폴던내 사진보여주기 , 그중에서 한개 선택하기 (개선점:멀티선택 기능 고려필요)
     private void showPhotoLoadingActivity() {
+        Log.d(LOG_TAG, "showPhotoLoadingActivity Start");
+
+
         Intent intent = new Intent(getApplicationContext(), PhotoSelectionActivity.class);
         startActivityForResult(intent, BasicInfo.REQ_PHOTO_SELECTION_ACTIVITY);
+
+        Log.d(LOG_TAG, "showPhotoLoadingActivity End");
 
     }
     /**
@@ -1672,16 +1763,19 @@ public class MemoInsertActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
+        Log.d(LOG_TAG, "onActivityResult Start");
+
+
         switch (requestCode) {
             case BasicInfo.REQ_PHOTO_CAPTURE_ACTIVITY:
-                Log.d(TAG, "사진촬영화면에서 응답처리 요청 REQ_PHOTO_CAPTURE_ACTIVITY 코드 :" + BasicInfo.REQ_PHOTO_CAPTURE_ACTIVITY);
+                Log.d(LOG_TAG, "사진촬영화면에서 응답처리 요청 REQ_PHOTO_CAPTURE_ACTIVITY 코드 :" + BasicInfo.REQ_PHOTO_CAPTURE_ACTIVITY);
 
                 if (resultCode == RESULT_OK) {
-                    Log.d(TAG, "사진촬영정상처리됨 처리코드 : " + resultCode);
+                    Log.d(LOG_TAG, "사진촬영정상처리됨 처리코드 : " + resultCode);
                     boolean isPhotoExists = checkCapturedPhotoFile();
                     //캡처사진 존재여부 첵크
                     if (isPhotoExists) {
-                        Log.d(TAG, "캡쳐된 이미지 존재함. 이미지파일 :" + BasicInfo.FOLDER_PHOTO + "captured");
+                        Log.d(LOG_TAG, "캡쳐된 이미지 존재함. 이미지파일 :" + BasicInfo.FOLDER_PHOTO + "captured");
 
                         resultPhotoBitmap = BitmapFactory.decodeFile(BasicInfo.FOLDER_PHOTO + "captured");
                         tempPhotoUri = "captured";
@@ -1690,16 +1784,16 @@ public class MemoInsertActivity extends AppCompatActivity {
                         //다시그림
                         mPhoto.invalidate();
                     } else {
-                        Log.d(TAG, "촬영된 이미지 파일이 존재하지 않음 파일형태 : " + BasicInfo.FOLDER_PHOTO + "captured");
+                        Log.d(LOG_TAG, "촬영된 이미지 파일이 존재하지 않음 파일형태 : " + BasicInfo.FOLDER_PHOTO + "captured");
                     }
                 }
                 break;
 
             case BasicInfo.REQ_PHOTO_SELECTION_ACTIVITY:
-                Log.d(TAG, "사진을 앨범에서 선택했음 응답 액티비티 코드 REQ_PHOTO_SELECTION_ACTIVITY : " + BasicInfo.REQ_PHOTO_SELECTION_ACTIVITY);
+                Log.d(LOG_TAG, "사진을 앨범에서 선택했음 응답 액티비티 코드 REQ_PHOTO_SELECTION_ACTIVITY : " + BasicInfo.REQ_PHOTO_SELECTION_ACTIVITY);
 
                 if (resultCode == RESULT_OK) {
-                    Log.d(TAG, "앨범에서 사진선택 정상처리 됨 응답코드 : " + resultCode);
+                    Log.d(LOG_TAG, "앨범에서 사진선택 정상처리 됨 응답코드 : " + resultCode);
                     Uri getPhotoUri = intent.getParcelableExtra(BasicInfo.KEY_URI_PHOTO);
 
                     //BitmapFactory.Options options = new BitmapFactory.Options();
@@ -1708,9 +1802,9 @@ public class MemoInsertActivity extends AppCompatActivity {
 
                     try {
                         resultPhotoBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(getPhotoUri));
-                        Log.d(TAG, "REQ_PHOTO_SELECTION_ACTIVITY BitmapFactory.decodeStream : " + getPhotoUri);
+                        Log.d(LOG_TAG, "REQ_PHOTO_SELECTION_ACTIVITY BitmapFactory.decodeStream : " + getPhotoUri);
                     } catch (FileNotFoundException e) {
-                        Log.e(TAG, "이미지 디코드중 예외발생", e);
+                        Log.e(LOG_TAG, "이미지 디코드중 예외발생", e);
                     }
                     mPhoto.setImageBitmap(resultPhotoBitmap);
                     isPhotoCaptured = true;
@@ -1719,7 +1813,7 @@ public class MemoInsertActivity extends AppCompatActivity {
 
                 break;
             case BasicInfo.REQ_HANDWRITING_MAKING_ACTIVITY:
-                Log.d(TAG, "손글씨 저장 요청 응답 액티비티 코드 REQ_HANDWRITING_MAKING_ACTIVITY : " + BasicInfo.REQ_HANDWRITING_MAKING_ACTIVITY);
+                Log.d(LOG_TAG, "손글씨 저장 요청 응답 액티비티 코드 REQ_HANDWRITING_MAKING_ACTIVITY : " + BasicInfo.REQ_HANDWRITING_MAKING_ACTIVITY);
                 if (resultCode == RESULT_OK) {
                     boolean isHandwritingFile = checkMadeHandwritingFile();
                     if (isHandwritingFile) {
@@ -1731,7 +1825,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                 }
                 break;
             case BasicInfo.REQ_VIDEO_RECORDING_ACTIVITY:
-                Log.d(TAG, "동영상 녹화 응답코드: " + BasicInfo.REQ_VIDEO_RECORDING_ACTIVITY);
+                Log.d(LOG_TAG, "동영상 녹화 응답코드: " + BasicInfo.REQ_VIDEO_RECORDING_ACTIVITY);
 
                 if (resultCode == RESULT_OK) {
                     boolean isVideoExists = checkRecordedVideoFile();
@@ -1744,7 +1838,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                 }
                 break;
             case BasicInfo.REQ_VIDEO_LOADING_ACTIVITY:
-                Log.d(TAG, "동영상 불러오기 응답코드 : " + BasicInfo.REQ_VIDEO_LOADING_ACTIVITY);
+                Log.d(LOG_TAG, "동영상 불러오기 응답코드 : " + BasicInfo.REQ_VIDEO_LOADING_ACTIVITY);
                 if (resultCode == RESULT_OK) {
                     String getVideoUri = intent.getStringExtra(BasicInfo.KEY_URI_VIDEO);
                     tempVideoUri = BasicInfo.URI_MEDIA_FORMAT + getVideoUri;
@@ -1754,7 +1848,7 @@ public class MemoInsertActivity extends AppCompatActivity {
                 }
                 break;
             case BasicInfo.REQ_VOICE_RECORDING_ACTIVITY:
-                Log.d(TAG, "음성녹화 응답코드 : " + BasicInfo.REQ_VOICE_RECORDING_ACTIVITY);
+                Log.d(LOG_TAG, "음성녹화 응답코드 : " + BasicInfo.REQ_VOICE_RECORDING_ACTIVITY);
                 if (resultCode == RESULT_OK) {
                     boolean isVoiceExists = checkRecordedVoiceFile();
                     if (isVoiceRecorded) {
@@ -1768,17 +1862,26 @@ public class MemoInsertActivity extends AppCompatActivity {
             default:
                 break;
         }
+        Log.d(LOG_TAG, "onActivityResult End");
     }
 
     /**
-     *   저장된 손글씨 파일 존재여부 첵크
+     * 저장된 손글씨 파일 존재여부 첵크
+     *
      * @return
      */
     private boolean checkMadeHandwritingFile() {
+        Log.d(LOG_TAG, "checkMadeHandwritingFile Start");
+
         File file = new File(BasicInfo.FOLDER_HANDWRITING + "made");
         if (file.exists()) {
+            Log.d(LOG_TAG, "checkMadeHandwritingFile true End");
+
             return true;
         }
+
+        Log.d(LOG_TAG, "checkMadeHandwritingFile false End");
+
         return false;
     }
 
@@ -1786,28 +1889,79 @@ public class MemoInsertActivity extends AppCompatActivity {
      * 저장된 사진 파일확인
      */
     private boolean checkCapturedPhotoFile() {
+        Log.d(LOG_TAG, "checkCapturedPhotoFile Start");
+
+
         File file = new File(BasicInfo.FOLDER_PHOTO + "captured");
         if (file.exists()) {
+            Log.d(LOG_TAG, "checkCapturedPhotoFile true End");
+
             return true;
         }
+
+        Log.d(LOG_TAG, "checkCapturedPhotoFile false End");
+
         return false;
     }
 
     //동영상파일확인
     private boolean checkRecordedVideoFile() {
+        Log.d(LOG_TAG, "checkRecordedVideoFile Start");
+
         File file = new File(BasicInfo.FOLDER_VIDEO + "recorded");
         if (file.exists()) {
+            Log.d(LOG_TAG, "checkRecordedVideoFile true End");
+
             return true;
         }
+
+        Log.d(LOG_TAG, "checkRecordedVideoFile false End");
+
         return false;
     }
 
     //음성파일확인
     private boolean checkRecordedVoiceFile() {
+        Log.d(LOG_TAG, "checkRecordedVoiceFile Start");
+
         File file = new File(BasicInfo.FOLDER_VOICE + "recorded");
         if (file.exists()) {
+            Log.d(LOG_TAG, "checkRecordedVoiceFile true End");
+
             return true;
         }
+
+        Log.d(LOG_TAG, "checkRecordedVoiceFile false End");
+
         return false;
+    }
+
+    private class SlidingPageAnimationListener implements Animation.AnimationListener {
+
+        private final String LOG_TAG = "MultiMemo > "+SlidingPageAnimationListener.class.getSimpleName();
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+            Log.d(LOG_TAG, "onAnimationStart Start");
+
+            Log.d(LOG_TAG, "onAnimationStart End");
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            Log.d(LOG_TAG, "onAnimationEnd Start");
+
+            Log.d(LOG_TAG, "onAnimationEnd End");
+
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+            Log.d(LOG_TAG, "onAnimationRepeat Start");
+
+            Log.d(LOG_TAG, "onAnimationRepeat End");
+
+        }
     }
 }

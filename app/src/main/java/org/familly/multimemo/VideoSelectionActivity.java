@@ -23,7 +23,7 @@ import org.familly.multimemo.common.TitleBitmapButton;
 
 
 public class VideoSelectionActivity extends AppCompatActivity {
-    private static final String TAG = "DEBUG";
+    private static final String LOG_TAG = "DEBUG";
     //앨범에서 선택한 비디오의 uri
     String mAlbumVideoUri;
 
@@ -37,6 +37,8 @@ public class VideoSelectionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(LOG_TAG, "onCreate Start");
+
         //타이틀바없애기
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_video_selection);
@@ -45,7 +47,7 @@ public class VideoSelectionActivity extends AppCompatActivity {
 
         setBottomBtns();
 
-        Log.d(TAG, "동영상 데이트 로딩...");
+        Log.d(LOG_TAG, "동영상 데이트 로딩...");
 
         //리스트뷰 참조
         mVideoList = (ListView) findViewById(R.id.loading_listView);
@@ -72,21 +74,29 @@ public class VideoSelectionActivity extends AppCompatActivity {
                     mSelectedVideoTitle.setText(str);
                     mSelectedVideoTitle.setSelected(true);
                 } catch (Exception ex) {
-                    Log.e(TAG, "선택된 아이템에 대한 이벤처리중 예외발생 : ", ex);
+                    Log.e(LOG_TAG, "선택된 아이템에 대한 이벤처리중 예외발생 : ", ex);
                 }
 
             }
         });
+        Log.d(LOG_TAG, "onCreate End");
+
     }
 
     //사용자정의 메소드 start
     public void setSelectVideoText() {
+        Log.d(LOG_TAG, "setSelectVideoText Start");
+
         mSelectedVideoTitle = (TextView) findViewById(R.id.loading_selectedVideo);
+
+        Log.d(LOG_TAG, "setSelectVideoText End");
 
     }
 
     //버튼영역 설정
     public void setBottomBtns() {
+        Log.d(LOG_TAG, "setBottomBtns Start");
+
         TitleBitmapButton loadingOkBtn = (TitleBitmapButton) findViewById(R.id.loading_okBtn);
         TitleBitmapButton loadingCancelBtn = (TitleBitmapButton) findViewById(R.id.loading_cancelBtn);
 
@@ -104,16 +114,22 @@ public class VideoSelectionActivity extends AppCompatActivity {
                 finish();
             }
         });
+        Log.d(LOG_TAG, "setBottomBtns End");
+
     }
 
     //부모 액티비티로 돌아가기
     private void showParentActivity() {
+        Log.d(LOG_TAG, "showParentActivity Start");
+
         Intent intent = getIntent();
 
         if (mAlbumVideoUri != null) {
             intent.putExtra(BasicInfo.KEY_URI_VIDEO, mAlbumVideoUri);
             setResult(RESULT_OK, intent);
         }
+        Log.d(LOG_TAG, "showParentActivity End");
+
         finish();
     }
 
@@ -122,47 +138,63 @@ public class VideoSelectionActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        Log.d(TAG, "VideoSelectionActivity  onWindowFocusChanged()호출 포커스변경여부 : " + hasFocus);
+        Log.d(LOG_TAG, "onWindowFocusChanged Start");
+
+        Log.d(LOG_TAG, "포커스변경여부 : " + hasFocus);
         if (hasFocus) {
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                     Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath())));
         }
+        Log.d(LOG_TAG, "onWindowFocusChanged End");
+
     }
 
     //end
     //inner class 정의 start
     class VideoCursorAdapter extends CursorAdapter {
+        private  final String LOG_TAG = "MultiMemo > "+CursorAdapter.class.getSimpleName();
+
 
         public VideoCursorAdapter(Context context, Cursor c) {
             super(context, c);
+            Log.d(LOG_TAG, "VideoCursorAdapter 생성");
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            Log.d(TAG, "VideoCursorAdapter newView() 호출 ");
+            Log.d(LOG_TAG, "newView() Start");
+
             TextView videoTitleText = new TextView(context);
-            videoTitleText.setTextColor(Color.GRAY);
+
+            videoTitleText.setTextColor(Color.BLUE);
+
             videoTitleText.setPadding(10, 10, 10, 10);
+
+            Log.d(LOG_TAG, "newView() End");
 
             return videoTitleText;
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            Log.d(TAG, "VideoCursorAdapter bindView() 호출 ");
+            Log.d(LOG_TAG, "bindView Start");
 
             TextView videoTitleText = (TextView) view;
+
             long id = cursor.getLong(cursor.getColumnIndexOrThrow(Video.Media._ID));
+
             String str = cursor.getString(cursor.getColumnIndexOrThrow(Video.Media.TITLE));
+
             Uri uri = ContentUris.withAppendedId(Video.Media.EXTERNAL_CONTENT_URI, id);
 
-            Log.d(TAG, "id -> " + id + " , title -> " + str + " , uri -> " + uri);
+            Log.d(LOG_TAG, "id -> " + id + " , title -> " + str + " , uri -> " + uri);
 
             try {
                 videoTitleText.setText(str);
             } catch (Exception e) {
-                Log.e(TAG, "bindView() 도중 예외발생 ...", e);
+                Log.e(LOG_TAG, "bindView() 도중 예외발생 ...", e);
             }
+            Log.d(LOG_TAG, "bindView End");
 
         }
     }

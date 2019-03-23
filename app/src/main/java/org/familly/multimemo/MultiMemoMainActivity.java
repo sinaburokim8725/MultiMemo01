@@ -28,7 +28,7 @@ import java.util.Locale;
 
 public class MultiMemoMainActivity extends AppCompatActivity {
     //디버거용
-    public static final String TAG = "DEBUG";
+    public static final String LOG_TAG = "MultiMemo > "+MultiMemoMainActivity.class.getSimpleName();
 
     /**
      *메모정보를 리스팅 할 리스트 뷰 참조
@@ -50,11 +50,12 @@ public class MultiMemoMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multi_memo_main);
+        Log.d(LOG_TAG, "onCreate Start");
 
         //set current locale 설정
         Locale currentLocale = getResources().getConfiguration().locale;
         BasicInfo.LANGUAGE = currentLocale.getLanguage();
-        Log.d(TAG,"현재 언어 : " + BasicInfo.LANGUAGE);
+        Log.d(LOG_TAG,"현재 언어 : " + BasicInfo.LANGUAGE);
 
         //sdcard  연결상태 첵크 check
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -64,15 +65,15 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         } else {
             //SD 카드가 연결되었을 경우
             String externalPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            Log.d(TAG, "Environment.getExternalStorageDirectory().getAbsolutePath() 외부저장소 절대경로는 >>> " + externalPath);
+            Log.d(LOG_TAG, "Environment.getExternalStorageDirectory().getAbsolutePath() 외부저장소 절대경로는 >>> " + externalPath);
             if (!BasicInfo.ExternalChecked && externalPath != null) {
                 //외부저장소연결상태양호 그리고 외부저장소 경로가 있을경우
                 BasicInfo.ExternalPath = externalPath + File.separatorChar;
-                Log.d(TAG, "externalPath : " + externalPath + " , File.separatorChar : " + File.separator);
+                Log.d(LOG_TAG, "externalPath : " + externalPath + " , File.separatorChar : " + File.separator);
 
-                Log.d(TAG, "변경전 BasicInfo.FOLDER_PHOTO" + BasicInfo.FOLDER_PHOTO);
+                Log.d(LOG_TAG, "변경전 BasicInfo.FOLDER_PHOTO" + BasicInfo.FOLDER_PHOTO);
                 BasicInfo.FOLDER_PHOTO = BasicInfo.ExternalPath + BasicInfo.FOLDER_PHOTO;
-                Log.d(TAG, "변경후 BasicInfo.FOLDER_PHOTO" + BasicInfo.FOLDER_PHOTO);
+                Log.d(LOG_TAG, "변경후 BasicInfo.FOLDER_PHOTO" + BasicInfo.FOLDER_PHOTO);
 
                 BasicInfo.FOLDER_VIDEO = BasicInfo.ExternalPath + BasicInfo.FOLDER_VIDEO;
                 BasicInfo.FOLDER_VOICE = BasicInfo.ExternalPath + BasicInfo.FOLDER_VOICE;
@@ -107,7 +108,7 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         nMemoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG,"새로운 멀티메모를 작성합니다.");
+                Log.d(LOG_TAG,"새로운 멀티메모를 작성합니다.");
 
                 //신규메모입력 액티비티로 이동한다.
                 Intent mIntent = new Intent(getApplicationContext(), MemoInsertActivity.class);
@@ -130,8 +131,12 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         itemCountText = (TextView) findViewById(R.id.itemCount);
         //
         checkDangerousPermissions();
+
+        Log.d(LOG_TAG, "onCreate End");
     }
     private void checkDangerousPermissions() {
+        Log.d(LOG_TAG, "checkDangerousPermissions Start");
+
         //문자배열로  퍼미션들 초기화 시켜준다.
         String[] permissions = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -159,11 +164,13 @@ public class MultiMemoMainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, permissions, 1);
             }
         }
+        Log.d(LOG_TAG, "checkDangerousPermissions End");
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG, "onRequestPermissionsResult() 콜백 함수 호출됨");
+
+        Log.d(LOG_TAG, "onRequestPermissionsResult() Start");
 
         if (requestCode == 1) {
             for (int i = 0; i < permissions.length; i++) {
@@ -175,12 +182,16 @@ public class MultiMemoMainActivity extends AppCompatActivity {
                 }
             }
         }
+
+        Log.d(LOG_TAG, "onRequestPermissionsResult() End");
     }
 
     /**
      * database 오픈
      */
     public void openDatabase() {
+        Log.d(LOG_TAG, "openDatabase Start");
+
         //데이터베이스오픈
         if (mDatabase != null) {
             mDatabase.close();
@@ -189,10 +200,12 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         mDatabase = MemoDatabase.getInstance(this);
         boolean isOpen = mDatabase.open();
         if (isOpen) {
-            Log.d(TAG, "메모데이터베이스 오픈됨");
+            Log.d(LOG_TAG, "메모데이터베이스 오픈됨");
         } else {
-            Log.d(TAG, "메모데이터베이스 오픈실패");
+            Log.d(LOG_TAG, "메모데이터베이스 오픈실패");
         }
+
+        Log.d(LOG_TAG, "openDatabase End");
     }
 
     /**
@@ -200,23 +213,32 @@ public class MultiMemoMainActivity extends AppCompatActivity {
      */
     @Override
     protected void onStart() {
+        super.onStart();
+
+        Log.d(LOG_TAG, "onStart Start");
+
         //데이터베이스 신규생성및 오픈
-        openDatabase();
+        if (mDatabase == null) {
+             openDatabase();
+        }
 
         //메모데이터 로딩
         loadMemoListData();
 
+        Log.d(LOG_TAG, "onStart End");
 
-        super.onStart();
     }
 
     //end
 
     //실제 데이터베이스에서 데이터를 가져오는 부분 구현필요.
     public int loadMemoListData() {
+        Log.d(LOG_TAG, "loadMemoListData Start");
+
         String sql = "SELECT _id, input_date,content_text,"
                 + "id_photo,id_video,id_voice,id_handwriting "
                 + "FROM MEMO ORDER BY input_date DESC";
+
         int recordCount = -1;
         //데이터 베이스 객체가 널이 아닐경우 즉 오픈되었을경우만
         if (MultiMemoMainActivity.mDatabase != null) {
@@ -226,7 +248,7 @@ public class MultiMemoMainActivity extends AppCompatActivity {
 
             //조회건수
             recordCount = rCursor.getCount();
-            Log.d(TAG, "조회건수 : " + recordCount);
+            Log.d(LOG_TAG, "조회건수 : " + recordCount);
 
             //조회정보를 담는 아이템 객체를 담는 컬렉션 객체(List 클래스형)를 초기화한다.
             mMemoListAdapter.clear();
@@ -300,6 +322,8 @@ public class MultiMemoMainActivity extends AppCompatActivity {
             itemCountText.invalidate();
         }
 
+        Log.d(LOG_TAG, "loadMemoListData End");
+
         return recordCount;
     }
     /**
@@ -308,6 +332,8 @@ public class MultiMemoMainActivity extends AppCompatActivity {
      * @return
      */
     public String getPhotoUriStr(String photoId) {
+        Log.d(LOG_TAG, "getPhotoUriStr Start");
+
         String photoUriStr = null;
         //photo id 가 유효할경우 쿼리해서 사진 id를 가져온다.
         if (photoId != null && !photoId.equals("-1")) {
@@ -323,10 +349,15 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         } else {
             photoUriStr = "";
         }
+
+        Log.d(LOG_TAG, "getPhotoUriStr End");
+
         return photoUriStr;
     }
     //손글씨 uri정보 가져오기
     public String getHandwritingUriStr(String handwritingId) {
+        Log.d(LOG_TAG, "getHandwritingUriStr Start");
+
         String handwritingUriStr = null;
 
         if (handwritingId != null && handwritingId.trim().length() > 0 && !handwritingId.equals("-1")) {
@@ -359,10 +390,15 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         } else {
             videoUriStr = "";
         }
+
+        Log.d(LOG_TAG, "getHandwritingUriStr End");
+
         return videoUriStr;
     }
     //음성   uri정보 가져오기
     public String getVoiceUriStr(String voiceId) {
+        Log.d(LOG_TAG, "getVoiceUriStr Start");
+
         String voiceUriStr = null;
 
         if (voiceId != null && voiceId.trim().length() > 0 && !voiceId.equals("-1")) {
@@ -377,12 +413,16 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         } else {
             voiceUriStr = "";
         }
+
+        Log.d(LOG_TAG, "getVoiceUriStr End");
+
         return voiceUriStr;
     }
 
-    //리스틀클릭시 입력화면으로
+    //리스트 클릭시 수정화면으로
     public void viewMemo(int index) {
-        Log.d(TAG, "MultimemoMainActivity viewMemo() 호출");
+        Log.d(LOG_TAG, "viewMemo Start");
+
         //클릭된 메모리스트 아이템 어뎁더 리스트 컬렉션에서 확득
         MemoListItem item = (MemoListItem) mMemoListAdapter.getItem(index);
 
@@ -421,13 +461,16 @@ public class MultiMemoMainActivity extends AppCompatActivity {
         intent.putExtra(BasicInfo.KEY_URI_VOICE, item.getData(9));
 
         startActivityForResult(intent, BasicInfo.REQ_VIEW_ACTIVITY);
+
+        Log.d(LOG_TAG, "viewMemo End");
     }
 
     //다른 액티버티의 응답처리
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "MultiMemoMainActivity  onActivityResult() 콜백함수 호출됨.");
+
+        Log.d(LOG_TAG, "onActivityResult Start");
 
         switch (requestCode) {
             case BasicInfo.REQ_INSERT_ACTIVITY:
@@ -441,6 +484,8 @@ public class MultiMemoMainActivity extends AppCompatActivity {
                 break;
             default:
         }
+
+        Log.d(LOG_TAG, "onActivityResult End");
     }
 
 }

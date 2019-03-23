@@ -1,21 +1,28 @@
 package org.familly.multimemo;
 
+import android.util.Log;
+
 public class MemoListItem {
+    private static final String LOG_TAG = "MultiMemo > "+MemoListItem.class.getSimpleName();
+
 
     private String itemId;
 
     private String[] objItems;
 
     //각아이템을 선택할수 있는지 여부
-    private boolean selectableListItem = true;
+    private boolean selectableListItem = false;//true
 
-    public MemoListItem(String itemId,String[] obj) {
+    public MemoListItem(String itemId, String[] obj) {
+        Log.d(LOG_TAG, "MemoListItem 생성");
+
         this.itemId = itemId;
         this.objItems = obj;
     }
 
     /**
      * initialize with string
+     *
      * @param memoId
      * @param memoDate
      * @param memoText
@@ -28,13 +35,15 @@ public class MemoListItem {
      * @param id_voice
      * @param uri_voice
      */
-    public MemoListItem(String memoId,String memoDate,String memoText,
+    public MemoListItem(String memoId, String memoDate, String memoText,
                         String id_hand_writing, String uri_handwriting,
-                        String id_phto,String uri_photo,
-                        String id_video,String uri_video,
-                        String id_voice,String uri_voice) {
+                        String id_phto, String uri_photo,
+                        String id_video, String uri_video,
+                        String id_voice, String uri_voice) {
 
-        itemId =memoId;
+        Log.d(LOG_TAG, "MemoListItem 생성");
+
+        itemId = memoId;
         objItems = new String[10];
         objItems[0] = memoDate;
         objItems[1] = memoText;
@@ -52,7 +61,13 @@ public class MemoListItem {
     /**
      * true if this item is selectable
      */
-    public boolean isSelectable(){
+    public boolean isSelectable() {
+        Log.d(LOG_TAG, "isSelectable Start");
+
+        Log.d(LOG_TAG, "selectableListItem > "+selectableListItem);
+
+        Log.d(LOG_TAG, "isSelectable End");
+
         return selectableListItem;
     }
 
@@ -60,57 +75,84 @@ public class MemoListItem {
      * Set selectable flag
      */
     public void setSelectable(boolean selectable) {
+        Log.d(LOG_TAG, "setSelectable Start");
+
         selectableListItem = selectable;
+
+        Log.d(LOG_TAG, "setSelectable End");
+
     }
 
     /**
      * Get data array
+     *
      * @return
      */
-    public String[] getData(){
+    public String[] getData() {
+        Log.d(LOG_TAG, "getData Start");
+
+
+        Log.d(LOG_TAG, "getData End");
+
         return objItems;
     }
 
     /**
      * Get data
+     *
      * @param index
      * @return
      */
     public String getData(int index) {
+        Log.d(LOG_TAG, "getData Start");
+
 
         if (objItems == null) {
+            Log.d(LOG_TAG, "getData null End");
+
             return null;
         }
+        Log.d(LOG_TAG, "getData End");
+
         return objItems[index];
     }
 
     /**
      * Set array
+     *
      * @param obj
      */
     public void setData(String[] obj) {
+        Log.d(LOG_TAG, "setData Start");
+
         objItems = obj;
+
+        Log.d(LOG_TAG, "setData End");
+
     }
 
 
     //Compare with the input object
-
     public int compareTo(MemoListItem other) {
+        Log.d(LOG_TAG, "compareTo Start");
 
-        if(objItems != null) {
+        if (objItems != null) {
             String[] array = other.getData();
 
             //길이가 같으면 동일한 객체?
             if (objItems.length == array.length) {
                 int index = 0;
                 for (String s : objItems) {
-                    if(!objItems[index].equals(s)){
+                    if (!objItems[index].equals(s)) {
+                        Log.d(LOG_TAG, "compareTo -1 End");
+
                         return -1;
                     }
-                    index ++;
+                    index++;
                 }
 
             } else {
+                Log.d(LOG_TAG, "compareTo -1 End");
 
                 return -1;
             }
@@ -118,11 +160,17 @@ public class MemoListItem {
         } else {
             throw new IllegalArgumentException();
         }
+        Log.d(LOG_TAG, "compareTo 0 End");
         //정상코드
         return 0;
     }
 
     public String getId() {
+        Log.d(LOG_TAG, "getId Start");
+
+
+        Log.d(LOG_TAG, "getId End");
+
         return itemId;
     }
 }

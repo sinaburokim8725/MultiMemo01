@@ -16,7 +16,7 @@ import java.io.OutputStream;
 import java.util.Stack;
 
 public class HandwritingView extends View {
-    private static final String TAG = "DEBUG";
+    private static final String LOG_TAG = "MultiMemo > "+MultiMemoMainActivity.class.getSimpleName();
 
     Bitmap bitmap;
     Canvas canvas;
@@ -43,6 +43,7 @@ public class HandwritingView extends View {
 
     public HandwritingView(Context context) {
         super(context);
+        Log.d(LOG_TAG, "HandwritingView 생성");
 
         //create a new paint object
         paint = new Paint();
@@ -56,14 +57,13 @@ public class HandwritingView extends View {
 
         lastX = -1;
         lastY = -1;
-
-        Log.d(TAG, "생성자를 통한 페인트보드 초기화 되었음");
-
 
     }
 
     public HandwritingView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        Log.d(LOG_TAG, "HandwritingView(Context context, AttributeSet attrs) 생성");
+
         //create a new paint object
         paint = new Paint();
         paint.setAntiAlias(RENDERING_ANTIALIAS);
@@ -77,29 +77,36 @@ public class HandwritingView extends View {
         lastX = -1;
         lastY = -1;
 
-        Log.d(TAG, "생성자를 통한 페인트보드 초기화 되었음");
-    }
+     }
 
     /**
      *
      */
     public void clearUndo() {
+        Log.d(LOG_TAG, "clearUndo Start");
+
         while (true) {
             Bitmap prev = undos.pop();
             if (prev == null) {
-                return ;
+                Log.d(LOG_TAG, "clearUndo End");
+                return;
             }
             //비트맵을 더이상 사용하지 않을경우 호출해야 한다.
             prev.recycle();
-
         }
+
     }
 
     /**
      *
      */
     public void saveUndo() {
+        Log.d(LOG_TAG, "saveUndo Start");
+
+
         if (bitmap == null) {
+            Log.d(LOG_TAG, "saveUndo End");
+
             return;
         }
         while (undos.size() >= maxUndo) {
@@ -113,13 +120,16 @@ public class HandwritingView extends View {
         canvas.drawBitmap(bitmap, 0, 0, paint);
         undos.push(img);
 
-        Log.d(TAG, "saveUndo() called");
+        Log.d(LOG_TAG, "saveUndo End");
+
     }
 
     /**
      *
      */
     public void undo() {
+        Log.d(LOG_TAG, "undo Start");
+
         Bitmap prev = null;
         if (!undos.isEmpty()) {
             prev = undos.pop();
@@ -130,21 +140,30 @@ public class HandwritingView extends View {
             invalidate();
             prev.recycle();
         }
-        Log.d(TAG, "undo() called");
+        Log.d(LOG_TAG, "undo End");
     }
 
     private void drawBackground(Canvas canvas) {
+        Log.d(LOG_TAG, "drawBackground Start");
+
         if (canvas != null) {
             canvas.drawColor(Color.argb(255, 255, 255, 255));
         }
+
+        Log.d(LOG_TAG, "drawBackground End");
+
     }
 
     /**
      * 변경한 색상 선굵기 업데이트
      */
     public void updatePaintProperty(int color, int strokeSize) {
+        Log.d(LOG_TAG, "updatePaintProperty Start");
+
         paint.setColor(color);
         paint.setStrokeWidth(strokeSize);
+
+        Log.d(LOG_TAG, "updatePaintProperty End");
 
     }
 
@@ -152,6 +171,8 @@ public class HandwritingView extends View {
      * Create a new image
      */
     public void newImage(int width, int height) {
+        Log.d(LOG_TAG, "newImage Start");
+
         Bitmap img = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas lCanvas = new Canvas();
         lCanvas.setBitmap(img);
@@ -161,6 +182,9 @@ public class HandwritingView extends View {
         drawBackground(canvas);
         changed = false;
         invalidate();
+
+        Log.d(LOG_TAG, "newImage End");
+
     }
 
     /**
@@ -168,6 +192,10 @@ public class HandwritingView extends View {
      * @return
      */
     public Bitmap getImage() {
+        Log.d(LOG_TAG, "getImage Start");
+
+        Log.d(LOG_TAG, "getImage End");
+
         return bitmap;
     }
 
@@ -175,14 +203,21 @@ public class HandwritingView extends View {
      *
      */
     public void setImage(Bitmap newImage) {
+        Log.d(LOG_TAG, "setImage Start");
+
         changed = false;
 
         setImageSize(newImage.getWidth(), newImage.getHeight(), newImage);
         invalidate();
+
+        Log.d(LOG_TAG, "setImage End");
+
     }
 
     private void setImageSize(int width, int height, Bitmap newImage) {
-        Log.d(TAG, "HandwritingView setImageSize() 호출됨");
+
+        Log.d(LOG_TAG, "setImageSize Start");
+
 
         if (bitmap != null) {
             if (width < bitmap.getWidth()) {
@@ -192,6 +227,8 @@ public class HandwritingView extends View {
                 height = bitmap.getHeight();
             }
             if (width < 1 || height < 1) {
+                Log.d(LOG_TAG, "setImageSize 폭,높이 1보다 작음. End");
+
                 return;
             }
             Bitmap img = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -211,6 +248,8 @@ public class HandwritingView extends View {
 
             clearUndo();
         }
+        Log.d(LOG_TAG, "setImageSize End");
+
     }
 
     /**
@@ -222,10 +261,14 @@ public class HandwritingView extends View {
      */
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Log.d(TAG, "HandwritingView onSizeChanged() 호출");
+        Log.d(LOG_TAG, "onSizeChanged Start");
+
         if (w > 0 && h > 0) {
             newImage(w, h);
         }
+
+        Log.d(LOG_TAG, "onSizeChanged End");
+
     }
 
     /**
@@ -235,20 +278,26 @@ public class HandwritingView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d(TAG, "HandwritingView onDraw() 호출");
+        Log.d(LOG_TAG, "onDraw Start");
+
         if (bitmap != null) {
             canvas.drawBitmap(bitmap,0,0,null);
         }
+
+        Log.d(LOG_TAG, "onDraw End");
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        Log.d(LOG_TAG, "onTouchEvent Start");
+
         int action = event.getAction();
 
         switch (action) {
             case MotionEvent.ACTION_UP:
                 //KIM
-                Log.d(TAG, "ACTION UP 호출");
+                Log.d(LOG_TAG, "ACTION UP 호출");
                 changed = true;
 
                 Rect rect = touchUp(event, false);
@@ -260,7 +309,7 @@ public class HandwritingView extends View {
                 return true;
 
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "ACTION_DOWN 호출");
+                Log.d(LOG_TAG, "ACTION_DOWN 호출");
                 saveUndo();
 
                 rect = touchDown(event);
@@ -270,7 +319,7 @@ public class HandwritingView extends View {
                 return true;
 
             case MotionEvent.ACTION_MOVE:
-                Log.d(TAG, "ACTION_MOVE");
+                Log.d(LOG_TAG, "ACTION_MOVE");
                 rect = touchMove(event);
                 if (rect != null) {
                     invalidate(rect);
@@ -279,16 +328,22 @@ public class HandwritingView extends View {
 
         }
 
-
         return false;
     }
 
     private Rect touchMove(MotionEvent event) {
+        Log.d(LOG_TAG, "touchMove Start");
+
         Rect rect = processMove(event);
+
+        Log.d(LOG_TAG, "touchMove End");
+
         return rect;
     }
 
     private Rect touchDown(MotionEvent event) {
+        Log.d(LOG_TAG, "touchDown Start");
+
         float x = event.getX();
         float y = event.getY();
 
@@ -306,16 +361,25 @@ public class HandwritingView extends View {
         curveEndY = y;
         canvas.drawPath(path, paint);
 
+        Log.d(LOG_TAG, "touchDown End");
+
         return invalidRect;
     }
 
     private Rect touchUp(MotionEvent event, boolean cancel) {
+        Log.d(LOG_TAG, "touchUp Start");
+
+
         Rect rect = processMove(event);
+
+        Log.d(LOG_TAG, "touchUp End");
 
         return rect;
     }
 
     private Rect processMove(MotionEvent event) {
+        Log.d(LOG_TAG, "processMove Start");
+
         final float x = event.getX();
         final float y = event.getY();
 
@@ -325,8 +389,8 @@ public class HandwritingView extends View {
         Rect invalidRect = new Rect();
         if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
             final int border = invalidateExtraBorder;
-            invalidRect.set((int)curveEndX - border,(int)curveEndY - border,
-                    (int)curveEndX + border,(int)curveEndY + border);
+            invalidRect.set((int) curveEndX - border, (int) curveEndY - border,
+                    (int) curveEndX + border, (int) curveEndY + border);
 
             float cX = curveEndX = (x + lastX) / 2;
             float cY = curveEndY = (y + lastY) / 2;
@@ -357,6 +421,7 @@ public class HandwritingView extends View {
 
             canvas.drawPath(path, paint);
         }
+        Log.d(LOG_TAG, "processMove End");
 
         return invalidRect;
     }
@@ -365,11 +430,13 @@ public class HandwritingView extends View {
      *
      */
     public boolean save(OutputStream outputStream) {
-        Log.d(TAG, "HandwritingView save() 호출");
+        Log.d(LOG_TAG, "save Start");
 
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
         invalidate();
-        return true;
 
+        Log.d(LOG_TAG, "save End");
+
+        return true;
     }
 }

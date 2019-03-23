@@ -1,6 +1,7 @@
 package org.familly.multimemo;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MemoListAdapter extends BaseAdapter {
+    private static final String LOG_TAG = "MultiMemo > "+MemoListAdapter.class.getSimpleName();
 
     //activity의 정보를 얻는다.
     private Context context;
@@ -18,6 +20,8 @@ public class MemoListAdapter extends BaseAdapter {
 
 
     public MemoListAdapter(Context context) {
+        Log.d(LOG_TAG, "MemoListAdapter 생성");
+
         this.context = context;
     }
 
@@ -32,7 +36,12 @@ public class MemoListAdapter extends BaseAdapter {
          * 이 호출이 반환되면 목록이 비어있게됩니다.
          *
          */
+        Log.d(LOG_TAG, "clear Start");
+
         mItems.clear();
+
+        Log.d(LOG_TAG, "clear End");
+
     }
 
     /**
@@ -40,19 +49,38 @@ public class MemoListAdapter extends BaseAdapter {
      * @param it
      */
     public void addIteme(MemoListItem it) {
+        Log.d(LOG_TAG, "addIteme Start");
+
         mItems.add(it);
+
+        Log.d(LOG_TAG, "addIteme End");
+
     }
 
     public void setListItems(List<MemoListItem> list){
+        Log.d(LOG_TAG, "setListItems Start");
+
         mItems = list;
+
+        Log.d(LOG_TAG, "setListItems End");
+
     }
 
     public boolean areAllItemsSelectable(){
+        Log.d(LOG_TAG, "areAllItemsSelectable Start");
+
+        Log.d(LOG_TAG, "areAllItemsSelectable false End");
         return false;
     }
 
     public boolean isSelectable(int index){
         try {
+            Log.d(LOG_TAG, "isSelectable Start");
+
+            Log.d(LOG_TAG, "mItems.get(index).isSelectable() > " + mItems.get(index).isSelectable());
+
+            Log.d(LOG_TAG, "isSelectable End");
+
             return mItems.get(index).isSelectable();
         } catch (IndexOutOfBoundsException ex){
             return false;
@@ -63,21 +91,36 @@ public class MemoListAdapter extends BaseAdapter {
     //구현해야할 메소드
     @Override
     public int getCount() {
+        Log.d(LOG_TAG, "getCount Start");
+
+        Log.d(LOG_TAG, "mItems.size() > "+mItems.size());
+
+        Log.d(LOG_TAG, "getCount End");
+
         return mItems.size();
     }
 
     @Override
     public Object getItem(int position) {
+        Log.d(LOG_TAG, "getItem Start");
+
+        Log.d(LOG_TAG, "mItems.get(position) > " + mItems.get(position));
+
+        Log.d(LOG_TAG, "getItem End");
         return mItems.get(position);
      }
 
     @Override
     public long getItemId(int position) {
+        Log.d(LOG_TAG, "getItemId Start");
+
+        Log.d(LOG_TAG, "getItemId End >" + position);
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Log.d(LOG_TAG, "getView Start");
 
         MemoListItemView itemView;
 
@@ -105,6 +148,8 @@ public class MemoListAdapter extends BaseAdapter {
         itemView.setMediaState(mItems.get(position).getData(7) ,
                                mItems.get(position).getData(9));
 
+
+        Log.d(LOG_TAG, "getView End");
 
         return itemView;
     }

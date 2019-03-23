@@ -11,7 +11,7 @@ import android.widget.Gallery;
 import android.widget.ImageView;
 
 public class CoverFlow extends Gallery {
-    private static final String TAG = "DEBUG";
+    public static final String LOG_TAG = "MultiMemo > "+CoverFlow.class.getSimpleName();
 
     private static int maxRotationAngle = 55;
     private static int maxZoom = -60;
@@ -20,11 +20,14 @@ public class CoverFlow extends Gallery {
 
     public CoverFlow(Context context) {
         super(context);
+        Log.d(LOG_TAG, "CoverFlow 생성");
         init();
     }
 
     public CoverFlow(Context context, AttributeSet attrs) {
         super(context, attrs);
+        Log.d(LOG_TAG, "CoverFlow(Context context, AttributeSet attrs) 생성");
+
         init();
     }
 
@@ -35,39 +38,76 @@ public class CoverFlow extends Gallery {
     // getChildStaticTransformation (View, Transformation)을 오버라이드 (override)하는 서브 클래스에서는,
     // 이 property를 true로 설정할 필요가 있습니다.
     private void init() {
+        Log.d(LOG_TAG, "init Start");
+
         this.setStaticTransformationsEnabled(true);
+
+        Log.d(LOG_TAG, "init End");
+
     }
 
     public int getMaxRotationAngle() {
+        Log.d(LOG_TAG, "getMaxRotationAngle Start");
+
+
+        Log.d(LOG_TAG, "getMaxRotationAngle End");
+
         return maxRotationAngle;
     }
 
     public void setMaxRotationAngle(int maxRotationAngle) {
+        Log.d(LOG_TAG, "setMaxRotationAngle Start");
+
         this.maxRotationAngle = maxRotationAngle;
+
+        Log.d(LOG_TAG, "setMaxRotationAngle End");
+
     }
 
     public int getMaxZoom() {
+        Log.d(LOG_TAG, "setMaxRotationAngle Start");
+
+        Log.d(LOG_TAG, "setMaxRotationAngle End");
+
         return maxZoom;
     }
 
     public void setMaxZoom(int maxZoom) {
+        Log.d(LOG_TAG, "setMaxRotationAngle Start");
+
         this.maxZoom = maxZoom;
+
+        Log.d(LOG_TAG, "setMaxRotationAngle End");
+
     }
 
     private int getCenterOfCoverflow() {
-        Log.d(TAG, "width : " + getWidth() + ", left padding : " + getPaddingLeft() + ", right padding : " + getPaddingRight());
+        Log.d(LOG_TAG, "getCenterOfCoverflow Start");
+
+        Log.d(LOG_TAG, "width : " + getWidth() + ", left padding : " + getPaddingLeft() + ", right padding : " + getPaddingRight());
+
+
+        Log.d(LOG_TAG, "getCenterOfCoverflow End");
 
         return (getWidth() - getPaddingLeft() - getPaddingRight()) / 2 + getPaddingLeft();
     }
 
     private static int getCenterOfView(View view) {
-        Log.d(TAG, "view left : " + view.getLeft() + " , " + "view width : " + view.getWidth());
+        Log.d(LOG_TAG, "getCenterOfView Start");
+
+        Log.d(LOG_TAG, "view left : " + view.getLeft() + " , " + "view width : " + view.getWidth());
+
+        Log.d(LOG_TAG, "getCenterOfView End");
+
         return view.getLeft() + view.getWidth()/2;
     }
 
     @Override
     protected boolean getChildStaticTransformation(View child, Transformation t) {
-        Log.d(TAG, "CoverFlow class getChildStaticTransformation() 호출됨 ");
+        Log.d(LOG_TAG, "getChildStaticTransformation Start");
+
+
+        Log.d(LOG_TAG, "CoverFlow class getChildStaticTransformation() 호출됨 ");
         final int childCenter = getCenterOfView(child);
         final int childWidth = child.getWidth();
         int rotationAngle = 0;
@@ -83,20 +123,30 @@ public class CoverFlow extends Gallery {
             }
             transformImageBitmap((ImageView) child, t, rotationAngle);
         }
+        Log.d(LOG_TAG, "getChildStaticTransformation End");
+
         return true;
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Log.d(TAG, "CenterFlow class onSizechanged() 호출 (현재너비,현재높이,이전너비,이전높이)"
+        super.onSizeChanged(w, h, oldw, oldh);
+        Log.d(LOG_TAG, "onSizeChanged Start");
+
+        Log.d(LOG_TAG, "CenterFlow class onSizechanged() 호출 (현재너비,현재높이,이전너비,이전높이)"
                 + "( " + w + " , " + h + " , " + oldw + " , " + oldh + " )");
 
         centerPoint = getCenterOfCoverflow();
-        super.onSizeChanged(w, h, oldw, oldh);
+
+        Log.d(LOG_TAG, "onSizeChanged End");
+
     }
 
     private void transformImageBitmap(ImageView child, Transformation t, int rotationAngle) {
+        Log.d(LOG_TAG, "transformImageBitmap Start");
+
         camera.save();
+
 
         //The 3x3 Matrix representing the trnasformation to apply to the coordinates of the object being animated
         //애니메이션되는 객체의 좌표에 적용 할 trnasformation을 나타내는 3x3 행렬입니다.
@@ -118,5 +168,7 @@ public class CoverFlow extends Gallery {
         imageMatrix.postTranslate((imageWidth / 2), (imageHeight / 2));
 
         camera.restore();
+
+        Log.d(LOG_TAG, "transformImageBitmap End");
     }
 }

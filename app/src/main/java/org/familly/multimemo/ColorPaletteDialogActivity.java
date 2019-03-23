@@ -16,7 +16,10 @@ import org.familly.multimemo.common.TitleBitmapButton;
  * 색상선택 대화상자
  */
 public class ColorPaletteDialogActivity extends AppCompatActivity {
-    private static final String TAG = "DEBUG";
+
+    public static final String LOG_TAG = "MultiMemo > "+ColorPaletteDialogActivity.class.getSimpleName();
+
+
     public static OnColorSelectedListener gSelectedListener;
 
     GridView          gColorGV;
@@ -26,6 +29,8 @@ public class ColorPaletteDialogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_palette_dialog);
+
+        Log.d(LOG_TAG, "onCreate Start");
 
         this.setTitle(R.string.color_selection_title);
 
@@ -40,18 +45,21 @@ public class ColorPaletteDialogActivity extends AppCompatActivity {
         ColorDataAdapter gAdapter = new ColorDataAdapter(this);
         gColorGV.setAdapter(gAdapter);
         gColorGV.setNumColumns(gAdapter.getNumColumns());
-
+        //gCloseBtn.setOnClickListener((v)->{finish();});
         gCloseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        Log.d(LOG_TAG, "onCreate End");
+
     }
 }
 
 class ColorDataAdapter extends BaseAdapter {
-    private static final String TAG = "DEBUG";
+    public static final String LOG_TAG = "MultiMemo > "+ColorPaletteDialogActivity.class.getSimpleName();
 
     Context gContext;
     //colors defined
@@ -69,6 +77,9 @@ class ColorDataAdapter extends BaseAdapter {
      */
     public ColorDataAdapter(Context context) {
         super();
+
+        Log.d(LOG_TAG, "ColorDataAdapter 객체생성");
+
         gContext = context;
 
         //create test data
@@ -77,7 +88,12 @@ class ColorDataAdapter extends BaseAdapter {
     }
     //사용자 정의 메소드 start
     public int getNumColumns() {
-        Log.d(TAG, "ColorDataAdapter getNumColumns() called  컬럼갯수 : " + columnCount);
+        Log.d(LOG_TAG, "getNumColumns Start");
+
+        Log.d(LOG_TAG, "ColorDataAdapter getNumColumns() called  컬럼갯수 : " + columnCount);
+
+        Log.d(LOG_TAG, "getNumColumns End");
+
         return columnCount;
     }
     //사용자 정의 메소드 end
@@ -85,32 +101,52 @@ class ColorDataAdapter extends BaseAdapter {
     //getView 메소드에서 내부적으로 생성할 뷰의 갯수를 이메소드를 통해서 얻는다. 중요함.
     @Override
     public int getCount() {
-        Log.d(TAG, "ColorDataAdapter getCount() called  색상수 (컬럼*행) : " + (rowCount * columnCount));
+        Log.d(LOG_TAG, "getCount Start");
+
+
+        Log.d(LOG_TAG, "ColorDataAdapter getCount() called  색상수 (컬럼*행) : " + (rowCount * columnCount));
+
+        Log.d(LOG_TAG, "getCount End");
+
         return rowCount * columnCount;
     }
 
     @Override
     public Object getItem(int position) {
-        Log.d(TAG, "ColorDataAdapter getItem() called \n" +
+        Log.d(LOG_TAG, "getItem Start");
+
+
+        Log.d(LOG_TAG, "ColorDataAdapter getItem() called \n" +
                 "인자 position 의 색상획득함. 획득색상값 : " + colors[position]);
+
+        Log.d(LOG_TAG, "getItem End");
+
         return colors[position];
     }
 
 
     @Override
     public long getItemId(int position) {
-        Log.d(TAG, "ColorDataAdapter getIemId() called ");
+        Log.d(LOG_TAG, "getItemId Start");
+
+
+        Log.d(LOG_TAG, "ColorDataAdapter getIemId() called ");
+
+        Log.d(LOG_TAG, "getItemId End");
+
         return 0;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d(TAG, "ColorDataAdapter getView(" + position + ") called.");
+        Log.d(LOG_TAG, "getView Start");
+
+        Log.d(LOG_TAG, "ColorDataAdapter getView(" + position + ") called.");
         //caculate position
         int rowIndex    = position / columnCount;
         int columnIndex = position % columnCount;
 
-        Log.d(TAG, "ColorDataAdapter \n" +
+        Log.d(LOG_TAG, "ColorDataAdapter \n" +
                 "  position : " + position +
                 "  rowCount : " + rowCount +
                 "  rowIndex : " + rowIndex +
@@ -132,7 +168,7 @@ class ColorDataAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (ColorPaletteDialogActivity.gSelectedListener != null) {
-                    Log.d(TAG, "ColorDataAdapter getView() 색상버튼 클릭이벤트 내 색상이 선택되었습니다." +
+                    Log.d(LOG_TAG, "ColorDataAdapter getView() 색상버튼 클릭이벤트 내 색상이 선택되었습니다." +
                             "선택된 색상값은 : " + ((Integer)v.getTag()).intValue());
 
                     ColorPaletteDialogActivity.gSelectedListener.onColorSelected(((Integer) v.getTag()).intValue());
@@ -140,6 +176,7 @@ class ColorDataAdapter extends BaseAdapter {
                 ((ColorPaletteDialogActivity)gContext).finish();
             }
         });
+        Log.d(LOG_TAG, "getView End");
 
         return aItem;
     }

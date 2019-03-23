@@ -20,7 +20,8 @@ import java.io.IOException;
  * 동영상 녹화 화면
  */
 public class VideoRecordingActivity extends AppCompatActivity {
-    private static final String TAG = "DEBUG";
+    private static final String LOG_TAG = "MultiMemo > "+MultiMemoMainActivity.class.getSimpleName();
+
 
     MediaRecorder mRecorder = null;
     TitleBitmapButton mStartStopBtn;
@@ -31,6 +32,7 @@ public class VideoRecordingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(LOG_TAG, "onCreate Start");
         /**
          * Retrieve the current Window for the activity.
          * This can be used to directly access parts of the Window API that are not available through Activity/Screen.
@@ -59,15 +61,21 @@ public class VideoRecordingActivity extends AppCompatActivity {
         mRecordingAreaLayout.addView(mCameraSurfaceView);
 
         setRecordingBtn();
+
+        Log.d(LOG_TAG, "onCreate End");
     }
 
     //사용자정의 start
     //녹화버튼 클릭시 동영상을 녹화한다.
     public void setRecordingBtn() {
+        Log.d(LOG_TAG, "setRecordingBtn Start");
+
         //녹화버튼참조
         mStartStopBtn = (TitleBitmapButton) findViewById(R.id.button_recording);
+
         mStartStopBtn.setCompoundDrawablesWithIntrinsicBounds(null, getResources().getDrawable
                 (R.drawable.btn_voice_record), null, null);
+
         mStartStopBtn.setText(R.string.video_recording_start_title);
 
         mStartStopBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +83,7 @@ public class VideoRecordingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //녹화 start
                 if (isStart == false) {
+
                     mCameraSurfaceView.stopPreview();
                     prepareVideoRecording();
 
@@ -98,20 +107,28 @@ public class VideoRecordingActivity extends AppCompatActivity {
                 }
             }
         });
+        Log.d(LOG_TAG, "setRecordingBtn End");
+
     }
 
     //동영상 폴더유무 첵크, 없을경우 폴더생성
     public void checkVideoFolder() {
+        Log.d(LOG_TAG, "checkVideoFolder Start");
+
         File videoFolder = new File(BasicInfo.FOLDER_VIDEO);
         if (!videoFolder.isDirectory()) {
-            Log.d(TAG, "비데오 폴더 생성 video folder : " + videoFolder);
+            Log.d(LOG_TAG, "비데오 폴더 생성 video folder : " + videoFolder);
 
             videoFolder.mkdirs();
         }
+        Log.d(LOG_TAG, "checkVideoFolder End");
+
     }
 
     //
     public void prepareVideoRecording() {
+        Log.d(LOG_TAG, "prepareVideoRecording Start");
+
         checkVideoFolder();
 
         String videoName = BasicInfo.FOLDER_VIDEO + "recorded";
@@ -123,10 +140,13 @@ public class VideoRecordingActivity extends AppCompatActivity {
         }
 
         mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 
         mRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
+
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
 
         mRecorder.setVideoFrameRate(30);
@@ -141,24 +161,36 @@ public class VideoRecordingActivity extends AppCompatActivity {
              * 이 메서드는 원하는 오디오 및 비디오 소스, 인코더, 파일 형식 등을 설정 한 후 start () 전에 호출해야합니다.
              */
             mRecorder.prepare();
+
         } catch (IOException e) {
-            Log.e(TAG, "MemoInsertActivity prepareVideoRecording() 인코딩 준비중 예외발생 :", e);
+
+            Log.e(LOG_TAG, "MemoInsertActivity prepareVideoRecording() 인코딩 준비중 예외발생 :", e);
         }
+        Log.d(LOG_TAG, "prepareVideoRecording End");
+
     }
     //end
 
     //start
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.d(LOG_TAG, "onKeyDown Start");
+
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (isStart) {
                 Toast toast = Toast.makeText(getApplicationContext(), R.string.video_recording_message, Toast.LENGTH_LONG);
                 toast.show();
             } else {
+                Log.d(LOG_TAG, "onKeyDown finish End");
+
                 finish();
             }
+            Log.d(LOG_TAG, "onKeyDown true End");
+
             return true;
         }
+        Log.d(LOG_TAG, "onKeyDown false End");
+
         return false;
     }
 
@@ -168,10 +200,13 @@ public class VideoRecordingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy Start");
+
         if (mRecorder != null) {
             mRecorder.release();
             mRecorder = null;
         }
+        Log.d(LOG_TAG, "onDestroy End");
     }
     //end
 }

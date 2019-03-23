@@ -28,7 +28,8 @@ import java.io.FileNotFoundException;
 import static android.provider.MediaStore.Images;
 
 public class PhotoSelectionActivity extends AppCompatActivity {
-    public static final String TAG = "DEBUG";
+    private static final String LOG_TAG = "MultiMemo > "+PhotoSelectionActivity.class.getSimpleName();
+
 
     private static int spacing = -45;
 
@@ -43,16 +44,19 @@ public class PhotoSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_selection);
+        Log.d(LOG_TAG, "onCreate Start");
 
         setBottomBtns();
 
         setSelectPhotoLayout();
 
-        Log.d(TAG, "loadding galley data ....");
+        Log.d(LOG_TAG, "loadding galley data ....");
 
         gPhotoGallery = (CoverFlow) findViewById(R.id.loading_gallery);
+
         Cursor cursor = getContentResolver().query(Images.Media.EXTERNAL_CONTENT_URI,
                 null, null, null, Images.Media.DATE_TAKEN + " DESC");
+
         PhotoCursorAdapter adapter = new PhotoCursorAdapter(this, cursor);
         gPhotoGallery.setAdapter(adapter);
 
@@ -60,7 +64,7 @@ public class PhotoSelectionActivity extends AppCompatActivity {
         gPhotoGallery.setSelection(2, true);
         gPhotoGallery.setAnimationDuration(3000);
 
-        Log.d(TAG, "PhotoSelectionActivity onCreate() Count of gallery images : " + gPhotoGallery.getCount());
+        Log.d(LOG_TAG, "onCreate() Count of gallery images : " + gPhotoGallery.getCount());
 
         //커버플로우 클릭이벤트 처리
         gPhotoGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -76,7 +80,7 @@ public class PhotoSelectionActivity extends AppCompatActivity {
                 try {
                     resultPhotoBitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri),
                             null, options);
-                    Log.d(TAG, "앨범에서 선택된 이미지 uri 정보: " + uri);
+                    Log.d(LOG_TAG, "앨범에서 선택된 이미지 uri 정보: " + uri);
 
                     gSelectPhotoText.setVisibility(View.GONE);
 
@@ -85,15 +89,17 @@ public class PhotoSelectionActivity extends AppCompatActivity {
                     gSelectedPhotoImage.setVisibility(View.VISIBLE);
 
                 } catch (FileNotFoundException e) {
-                    Log.e(TAG, "FILE NOT FOUND  : ", e);
+                    Log.e(LOG_TAG, "FILE NOT FOUND  : ", e);
                 }
             }
         });
+        Log.d(LOG_TAG, "onCreate End");
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        Log.d(LOG_TAG, "onWindowFocusChanged Start");
 
         if (hasFocus) {
 
@@ -103,60 +109,106 @@ public class PhotoSelectionActivity extends AppCompatActivity {
                     new MediaScannerConnection.OnScanCompletedListener() {
                         @Override
                         public void onScanCompleted(String path, Uri uri) {
-                            Log.d(TAG, "onWindowFocusChange() 호출  포커스된 이미지파일 스캔완료 ");
+                            Log.d(LOG_TAG, "onWindowFocusChange() 호출  포커스된 이미지파일 스캔완료 ");
                         }
                     });
 
         } else {
-            Log.d(TAG, "onWindowFocusChange() 호출 포커스된 파일 찾지못했음.");
+            Log.d(LOG_TAG, "onWindowFocusChange() 호출 포커스된 파일 찾지못했음.");
         }
+        Log.d(LOG_TAG, "onWindowFocusChanged End");
+
     }
 
     private void setBottomBtns() {
+        Log.d(LOG_TAG, "setBottomBtns Start");
+
         TitleBitmapButton loadingOkBtn = (TitleBitmapButton) findViewById(R.id.loading_okBtn);
+
         loadingOkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 showParentActivity();
             }
         });
+
         TitleBitmapButton loadingCancelBtn = (TitleBitmapButton) findViewById(R.id.loading_cancelBtn);
+
         loadingCancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "PhotoSelectionActivity 취소버튼 눌렸음");
+                Log.d(LOG_TAG, "loadingCancelBtn 취소버튼 눌렸음");
                 finish();
             }
         });
+        Log.d(LOG_TAG, "setBottomBtns End");
+
     }
 
     public void setSelectPhotoLayout() {
+        Log.d(LOG_TAG, "setSelectPhotoLayout Start");
+
         gSelectPhotoText = (TextView) findViewById(R.id.loading_selectPhotoText);
+
         gSelectedPhotoImage = (ImageView) findViewById(R.id.loading_selectedPhoto);
+
         gSelectedPhotoImage.setVisibility(View.VISIBLE);
+
+        Log.d(LOG_TAG, "setSelectPhotoLayout End");
     }
 
+    //요청 액티비티로 돌아가기
+    private void showParentActivity() {
+        Intent intent = getIntent();
+        if (gAlbumPhotoUri != null && resultPhotoBitmap != null) {
+            intent.putExtra(BasicInfo.KEY_URI_PHOTO, gAlbumPhotoUri);
+            //선택된 이미지 정보와 함께 호출요청한 액티비티에 요청처리 보냄
+            setResult(RESULT_OK, intent);
 
+            Log.d(LOG_TAG, "showParentActivity() 호출 (key,value) = "
+                    + " ( " + BasicInfo.KEY_URI_PHOTO + " , " + gAlbumPhotoUri + " ) ");
+
+        }
+        finish();
+    }
+
+    /**
+     * 기능:
+     */
     class PhotoCursorAdapter extends CursorAdapter {
+        private  final String LOG_TAG = "MultiMemo > "+PhotoCursorAdapter.class.getSimpleName();
+
         int gGalleryItemBackground;
 
         public PhotoCursorAdapter(Context context, Cursor cursor) {
             super(context, cursor);
+            Log.d(LOG_TAG, "PhotoCursorAdapter Start");
+
             //sinaburokim 커스텀뷰의 스타일 속성 지정및 변경시 사용하는것같다 자세한것은 심도있게 봐야 한다.
             TypedArray tA = obtainStyledAttributes(R.styleable.Gallery1);
+
             gGalleryItemBackground = tA.getResourceId(R.styleable.Gallery1_android_galleryItemBackground,
                     0);
+
             tA.recycle();
+
+            Log.d(LOG_TAG, "PhotoCursorAdapter End");
+
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            Log.d(TAG, "PhotoSelectionActivity inner class PhotoCursorAdapter binView()호출");
+            Log.d(LOG_TAG, "bindView Start");
+
             ImageView img = (ImageView) view;
             long id = cursor.getLong(cursor.getColumnIndexOrThrow(Images.Media._ID));
+
             //개별이미지에 대한 uri 생성
             Uri uri = ContentUris.withAppendedId(Images.Media.EXTERNAL_CONTENT_URI, id);
-            Log.d(TAG, "id : " + id + ", uri : " + uri);
+
+            Log.d(LOG_TAG, "id : " + id + ", uri : " + uri);
+
             try {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 //원본크기의 1/(8*8) 크기
@@ -169,30 +221,20 @@ public class PhotoSelectionActivity extends AppCompatActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+            Log.d(LOG_TAG, "bindView End");
+
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            Log.d(TAG, "inne class PhotoCursorAdapter newView() 호출");
+            Log.d(LOG_TAG, "newView() Start");
+
             ImageView imageView = new ImageView(context);
             imageView.setLayoutParams(new Gallery.LayoutParams(220, 150));
 
+            Log.d(LOG_TAG, "newView() End");
+
             return imageView;
         }
-    }
-
-    //요청 액티비티로 돌아가기
-    private void showParentActivity() {
-        Intent intent = getIntent();
-        if (gAlbumPhotoUri != null && resultPhotoBitmap != null) {
-            intent.putExtra(BasicInfo.KEY_URI_PHOTO, gAlbumPhotoUri);
-            //선택된 이미지 정보와 함께 호출요청한 액티비티에 요청처리 보냄
-            setResult(RESULT_OK, intent);
-
-            Log.d(TAG, "showParentActivity() 호출 (key,value) = "
-                    + " ( " + BasicInfo.KEY_URI_PHOTO + " , " + gAlbumPhotoUri + " ) ");
-
-        }
-        finish();
     }
 }
